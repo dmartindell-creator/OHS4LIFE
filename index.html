@@ -40,10 +40,10 @@ input.nf:focus{border-color:var(--g)}
 .quiz-section{margin-bottom:20px}
 .quiz-sec-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--g);margin-bottom:10px;display:flex;align-items:center;gap:6px}
 .quiz-sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
-.quiz-q{background:white;border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:6px}
+.quiz-q{background:white;border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:6px;overflow:hidden}
 .quiz-q-text{font-size:13px;font-weight:500;color:var(--text);margin-bottom:8px;line-height:1.5}
-.quiz-opts{display:flex;gap:6px;flex-wrap:wrap}
-.quiz-opt{padding:5px 12px;border-radius:20px;border:1.5px solid var(--border);background:white;font-size:12px;cursor:pointer;color:var(--muted);transition:all .15s}
+.quiz-opts{display:flex;gap:6px;flex-wrap:wrap;width:100%}
+.quiz-opt{padding:5px 12px;border-radius:20px;border:1.5px solid var(--border);background:white;font-size:12px;cursor:pointer;color:var(--muted);transition:all .15s;flex-shrink:0;max-width:100%}
 .quiz-opt.sel{background:var(--g);border-color:var(--g);color:white;font-weight:600}
 .quiz-opt-yn{padding:5px 14px;border-radius:20px;border:1.5px solid var(--border);background:white;font-size:12px;cursor:pointer;color:var(--muted)}
 .quiz-opt-yn.sel-y{background:var(--g);border-color:var(--g);color:white;font-weight:600}
@@ -442,10 +442,21 @@ function sb(s,m){const b=document.getElementById('syncBadge');if(!b)return;if(s=
 function userKey(){return 'ohs_user_'+pin;}
 function weekKey(){return 'ohs_week_'+pin+'_'+wk(wOff);}
 async function load(){
+  if(!SHEET){try{const l=localStorage.getItem(weekKey());state=l?JSON.parse(l):{}}catch(e){state={}}sb('ok');loaded=true;return;}
   sb('s','Loading...');
-  try{const r=await jsonp(SHEET+'?action=get&key='+encodeURIComponent(weekKey()));if(r&&r.status==='found'&&r.value){state=JSON.parse(r.value);try{localStorage.setItem(weekKey(),r.value)}catch(e){}sb('ok');}
-  else{try{const l=localStorage.getItem(weekKey());state=l?JSON.parse(l):{}}catch(e){state={}}sb('ok');}}
-  catch(e){try{const l=localStorage.getItem(weekKey());state=l?JSON.parse(l):{}}catch(e2){state={}}sb('err','Local only');}
+  try{
+    const r=await jsonp(SHEET+'?action=get&key='+encodeURIComponent(weekKey()));
+    if(r&&r.status==='found'&&r.value){
+      state=JSON.parse(r.value);
+      try{localStorage.setItem(weekKey(),r.value)}catch(e){}
+    } else {
+      try{const l=localStorage.getItem(weekKey());state=l?JSON.parse(l):{}}catch(e){state={}}
+    }
+    sb('ok');
+  } catch(e){
+    try{const l=localStorage.getItem(weekKey());state=l?JSON.parse(l):{}}catch(e2){state={}}
+    sb('err','Saved locally');
+  }
   loaded=true;
 }
 function sched(){sb('s','Saving...');if(sTimer)clearTimeout(sTimer);sTimer=setTimeout(doSave,1200);}
@@ -480,9 +491,30 @@ function enterPin(){
   if(v.length<4){e.textContent='PIN must be at least 4 digits';e.style.display='block';return;}
   e.style.display='none';
   const profileKey='ohs_user_'+v;
-  let profile=null;try{const l=localStorage.getItem(profileKey);if(l)profile=JSON.parse(l);}catch(e){}
-  if(profile&&profile.name){pin=v;userName=profile.name;userTier=profile.tier||3;launchApp();}
-  else{e.textContent='PIN not found. Create an account below.';e.style.display='block';}
+  let profile=null;
+  // Try localStorage first for speed
+  try{const l=localStorage.getItem(profileKey);if(l)profile=JSON.parse(l);}catch(err){}
+  if(profile&&profile.name){
+    pin=v;userName=profile.name;userTier=profile.tier||3;launchApp();
+  } else if(SHEET){
+    // Try loading from sheet
+    e.textContent='Looking up your account...';e.style.display='block';
+    jsonp(SHEET+'?action=get&key='+encodeURIComponent(profileKey)).then(r=>{
+      if(r&&r.status==='found'&&r.value){
+        profile=JSON.parse(r.value);
+        try{localStorage.setItem(profileKey,r.value);}catch(err){}
+        pin=v;userName=profile.name;userTier=profile.tier||3;
+        e.style.display='none';
+        launchApp();
+      } else {
+        e.textContent='PIN not found. Create an account below.';e.style.display='block';
+      }
+    }).catch(()=>{
+      e.textContent='PIN not found. Create an account below.';e.style.display='block';
+    });
+  } else {
+    e.textContent='PIN not found. Create an account below.';e.style.display='block';
+  }
 }
 function createAccount(){
   const name=document.getElementById('newName').value.trim();
@@ -506,6 +538,7 @@ function launchApp(){
   document.getElementById('quizScreen').style.display='none';
   document.getElementById('mainApp').style.display='flex';
   document.getElementById('userBdg').textContent=userName+' · logout';
+  sb('s','Connecting...');
   const tier=TIERS[userTier];
   document.getElementById('tierPill').textContent=tier.emoji+' '+tier.name;
   document.getElementById('tierPill').style.background=tier.color;
@@ -531,7 +564,7 @@ function renderQuiz(){
         <div class="quiz-q-text">${q.text}</div>
         <div class="quiz-opts">`;
       if(q.showIf&&quizAnswers[q.showIf.id]!==q.showIf.val){
-        H+=`<div style="font-size:11px;color:#bbb;font-style:italic">Answer the injury question above to unlock this</div>`;
+        H+=`<div style="font-size:11px;color:#bbb;font-style:italic;padding:4px 0">Select "Yes" above to unlock this</div>`;
       } else if(q.type==='yn'){
         H+=`<button class="quiz-opt-yn ${quizAnswers[q.id]==='yes'?'sel-y':''}" onclick="setAnswer('${q.id}','yes',this,'yn')">✓ Yes</button>
             <button class="quiz-opt-yn ${quizAnswers[q.id]==='no'?'sel-n':''}" onclick="setAnswer('${q.id}','no',this,'yn')">✗ No</button>`;
@@ -543,9 +576,13 @@ function renderQuiz(){
         });
       } else if(q.type==='text_optional'){
         H+=`<input type="text" style="width:100%;padding:8px 10px;border-radius:7px;border:1.5px solid var(--border);background:var(--cream);font-size:13px;outline:none" placeholder="Optional — describe your injury (e.g. torn meniscus, rotator cuff surgery)..." value="${quizAnswers[q.id]||''}" oninput="quizAnswers['${q.id}']=this.value">`;
+      } else if(q.type==='mc_vertical'){
+        q.opts.forEach((opt,oi)=>{
+          H+=`<button class="quiz-opt ${quizAnswers[q.id]===opt?'sel':''}" onclick="setAnswer('${q.id}','${opt}',this,'mc')" style="width:100%;text-align:left;border-radius:8px;padding:8px 12px;margin-bottom:3px">${opt}</button>`;
+        });
       } else {
         q.opts.forEach((opt,oi)=>{
-          H+=`<button class="quiz-opt ${quizAnswers[q.id]===opt?'sel':''}" onclick="setAnswer('${q.id}','${opt}',this,'mc')">${opt}</button>`;
+          H+=`<button class="quiz-opt ${quizAnswers[q.id]===opt?'sel':''}" onclick="setAnswer('${q.id}','${opt}',this,'mc')" style="width:100%;text-align:left;border-radius:8px;padding:8px 12px;margin-bottom:3px;display:block">${opt}</button>`;
         });
       }
       H+=`</div></div>`;
@@ -567,6 +604,12 @@ function toggleMulti(id,val,el){
 }
 function setAnswer(id,val,el,type){
   quizAnswers[id]=val;
+  // If this is a showIf trigger question, re-render the whole quiz
+  const isShowIfTrigger=QUIZ_QUESTIONS.some(s=>s.questions.some(q=>q.showIf&&q.showIf.id===id));
+  if(isShowIfTrigger){
+    renderQuiz();
+    return;
+  }
   // Update UI
   const parent=el.parentElement;
   if(type==='yn'){
@@ -1075,18 +1118,21 @@ function renderSettings(){
 
   // NAME + START DATE
   const startDate=profile.startDate||new Date().toISOString().split('T')[0];
+  const startFormatted=new Date(startDate+'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  const weekNum=Math.max(1,Math.ceil((new Date()-new Date(startDate+'T12:00:00'))/(7*24*60*60*1000)));
   H+=`<div class="sec"><div class="sh"><div class="st"><div class="dot" style="background:var(--g)"></div>Your profile</div></div>
   <div class="card">
     <div style="margin-bottom:10px">
       <label class="lbl">Your name</label>
-      <input type="text" id="settingsName" value="${esc(userName)}" placeholder="Your first name" style="margin-bottom:6px">
+      <input type="text" id="settingsName" value="${esc(userName)}" placeholder="Your first name">
     </div>
-    <div style="margin-bottom:10px">
-      <label class="lbl">Training start date <span style="font-size:10px;color:var(--muted);font-weight:400;text-transform:none">(Week 1 begins from this date)</span></label>
-      <input type="date" id="settingsStartDate" value="${startDate}" style="margin-bottom:6px;padding:8px 10px;border-radius:6px;border:1px solid var(--border);background:var(--cream);font-size:13px;width:100%;outline:none">
+    <div style="margin-bottom:10px;padding:10px 12px;background:var(--cream);border-radius:8px;border:1px solid var(--border)">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:3px">Training started</div>
+      <div style="font-size:14px;font-weight:700;color:var(--g)">${startFormatted}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px">Week ${weekNum} of training · ${Math.max(0,Math.ceil((RACE_DATE-new Date())/(24*60*60*1000)))} days to race</div>
     </div>
-    <button onclick="saveName()" style="padding:8px 16px;border-radius:7px;border:none;background:var(--g);color:white;font-size:12px;font-weight:700;cursor:pointer">Save profile</button>
-    <div id="nameMsg" style="font-size:11px;color:var(--g);margin-top:5px;display:none">Profile updated ✓</div>
+    <button onclick="saveName()" style="padding:8px 16px;border-radius:7px;border:none;background:var(--g);color:white;font-size:12px;font-weight:700;cursor:pointer">Save name</button>
+    <div id="nameMsg" style="font-size:11px;color:var(--g);margin-top:5px;display:none">Name updated ✓</div>
   </div></div>`;
 
   // INJURIES
@@ -1163,15 +1209,12 @@ function renderSettings(){
 
 function saveName(){
   const newName=document.getElementById('settingsName').value.trim();
-  const startDateEl=document.getElementById('settingsStartDate');
-  const newStart=startDateEl?startDateEl.value:'';
   if(!newName)return;
   userName=newName;
   document.getElementById('userBdg').textContent=userName+' · logout';
   let profile={};
   try{const p=localStorage.getItem('ohs_user_'+pin);if(p)profile=JSON.parse(p);}catch(e){}
   profile.name=newName;
-  if(newStart)profile.startDate=newStart;
   try{localStorage.setItem('ohs_user_'+pin,JSON.stringify(profile));}catch(e){}
   if(SHEET)jsonp(SHEET+'?action=set&key='+encodeURIComponent(userKey())+'&value='+encodeURIComponent(JSON.stringify(profile))).catch(()=>{});
   const msg=document.getElementById('nameMsg');
