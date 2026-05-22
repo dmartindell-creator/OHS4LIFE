@@ -244,7 +244,7 @@ function getTrainingWeek(){
   return Math.max(1,Math.ceil((new Date()-start)/(7*24*60*60*1000)));
 }
 let _n=0;
-function jsonp(url){return new Promise((res,rej)=>{const cb='_oh'+(++_n),s=document.createElement('script');const t=setTimeout(()=>{cleanup();rej(new Error('timeout'))},10000);function cleanup(){clearTimeout(t);delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);}window[cb]=d=>{cleanup();res(d);};s.src=url+(url.includes('?')?'&':'?')+'callback='+cb+'&t='+Date.now();s.onerror=()=>{cleanup();rej(new Error('err'));};document.head.appendChild(s);});}
+function jsonp(url,retries=2){return new Promise((res,rej)=>{const cb='_oh'+(++_n),s=document.createElement('script');const t=setTimeout(()=>{cleanup();if(retries>0)jsonp(url,retries-1).then(res).catch(rej);else rej(new Error('timeout'))},12000);function cleanup(){clearTimeout(t);delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);}window[cb]=d=>{cleanup();res(d);};s.src=url+(url.includes('?')?'&':'?')+'callback='+cb+'&t='+Date.now();s.onerror=()=>{cleanup();if(retries>0)jsonp(url,retries-1).then(res).catch(rej);else rej(new Error('err'));};document.head.appendChild(s);});}
 
 const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const SHORT=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -461,8 +461,15 @@ async function load(){
 }
 function sched(){sb('s','Saving...');if(sTimer)clearTimeout(sTimer);sTimer=setTimeout(doSave,1200);}
 async function doSave(){
-  const p=JSON.stringify(state);try{localStorage.setItem(weekKey(),p)}catch(e){}
-  if(SHEET){try{const r=await jsonp(SHEET+'?action=set&key='+encodeURIComponent(weekKey())+'&value='+encodeURIComponent(p));sb(r&&r.status==='saved'?'ok':'err','Local only');}catch(e){sb('err','Local only');}}
+  const p=JSON.stringify(state);
+  try{localStorage.setItem(weekKey(),p)}catch(e){}
+  if(!SHEET){sb('ok');saveUserProfile();return;}
+  try{
+    const r=await jsonp(SHEET+'?action=set&key='+encodeURIComponent(weekKey())+'&value='+encodeURIComponent(p));
+    sb(r&&r.status==='saved'?'ok':'err','Saved locally');
+  }catch(e){
+    sb('err','Saved locally');
+  }
   saveUserProfile();
 }
 function saveUserProfile(){
@@ -523,13 +530,49 @@ function createAccount(){
   if(!name){e.textContent='Enter your first name';e.style.display='block';return;}
   if(newPin.length<4){e.textContent='PIN must be at least 4 digits';e.style.display='block';return;}
   e.style.display='none';
-  pin=newPin;userName=name;userTier=3;
-  // Save start date as today
-  const profile={name,pin:newPin,tier:3,startDate:new Date().toISOString().split('T')[0],lastSeen:new Date().toISOString()};
-  try{localStorage.setItem('ohs_user_'+newPin,JSON.stringify(profile));}catch(e2){}
-  // Show quiz first
-  document.getElementById('pinScreen').style.display='none';
-  startQuiz();
+  e.textContent='Checking PIN availability...';e.style.display='block';e.style.color='#888';e.style.background='#f5f4f0';
+
+  const checkAndCreate=()=>{
+    // Check localStorage first
+    const existingLocal=localStorage.getItem('ohs_user_'+newPin);
+    if(existingLocal){
+      e.textContent='That PIN is already taken — try a different one';
+      e.style.color='#c02828';e.style.background='#fceaea';
+      return;
+    }
+    // Check sheet
+    if(SHEET){
+      jsonp(SHEET+'?action=get&key='+encodeURIComponent('ohs_user_'+newPin)).then(r=>{
+        if(r&&r.status==='found'){
+          e.textContent='That PIN is already taken — try a different one';
+          e.style.color='#c02828';e.style.background='#fceaea';
+        } else {
+          e.style.display='none';
+          pin=newPin;userName=name;userTier=3;
+          const profile={name,pin:newPin,tier:3,startDate:new Date().toISOString().split('T')[0],lastSeen:new Date().toISOString()};
+          try{localStorage.setItem('ohs_user_'+newPin,JSON.stringify(profile));}catch(e2){}
+          document.getElementById('pinScreen').style.display='none';
+          startQuiz();
+        }
+      }).catch(()=>{
+        // Sheet unreachable — proceed anyway, PIN conflict unlikely
+        e.style.display='none';
+        pin=newPin;userName=name;userTier=3;
+        const profile={name,pin:newPin,tier:3,startDate:new Date().toISOString().split('T')[0],lastSeen:new Date().toISOString()};
+        try{localStorage.setItem('ohs_user_'+newPin,JSON.stringify(profile));}catch(e2){}
+        document.getElementById('pinScreen').style.display='none';
+        startQuiz();
+      });
+    } else {
+      e.style.display='none';
+      pin=newPin;userName=name;userTier=3;
+      const profile={name,pin:newPin,tier:3,startDate:new Date().toISOString().split('T')[0],lastSeen:new Date().toISOString()};
+      try{localStorage.setItem('ohs_user_'+newPin,JSON.stringify(profile));}catch(e2){}
+      document.getElementById('pinScreen').style.display='none';
+      startQuiz();
+    }
+  };
+  checkAndCreate();
 }
 document.getElementById('pinInput').addEventListener('keydown',e=>{if(e.key==='Enter')enterPin();});
 
@@ -894,7 +937,7 @@ function renderFitness(){
   const wk_key=`fitness_wk${week}`;
 
   let totalScore=FITNESS_PILLARS.reduce((a,p)=>a+(parseInt(g(`${wk_key}.${p.key}`,0))||0),0);
-  const maxScore=FITNESS_PILLARS.length*9;
+  const maxScore=FITNESS_PILLARS.length*9; // 5 pillars × 9 = 45
   const pct=Math.round((totalScore/maxScore)*100);
 
   let H=`<div class="dh"><div class="dn" style="color:var(--g)">F.I.T.N.E.S.S</div><div class="dm"><div style="font-size:10px;color:var(--muted)">Week ${week} score</div><div style="font-size:22px;font-weight:800;color:var(--g)">${totalScore}/${maxScore}</div></div></div>
@@ -906,17 +949,21 @@ function renderFitness(){
   </div>`;
 
   FITNESS_PILLARS.forEach(p=>{
-    const score=parseInt(g(`${wk_key}.${p.key}`,0))||0;
+    const pKey=p.key;
+    const fullKey=wk_key+'.'+pKey;
+    const score=parseInt(g(fullKey,0))||0;
+    let btns='';
+    for(let n=1;n<=9;n++){
+      btns+=`<div class="fl-score-btn ${score===n?'sel':''}" onclick="sv('${fullKey}',${n});renderAll()">${n}</div>`;
+    }
     H+=`<div class="fitness-letter">
       <div class="fl-header">
-        <div><div class="fl-letter">${p.letter}</div><div class="fl-word">${p.full}</div></div>
+        <div><div class="fl-letter" style="font-size:${p.letter.length>1?'18px':'28px'}">${p.letter}</div><div class="fl-word">${p.full}</div></div>
         <div style="font-size:24px;font-weight:900;color:${score>=7?'#e8b830':score>=4?'rgba(255,255,255,.8)':'rgba(255,255,255,.4)'}">${score}/9</div>
       </div>
       <div class="fl-desc">${p.desc}</div>
       <div style="font-size:11px;color:rgba(255,255,255,.6);margin-bottom:6px">${p.q}</div>
-      <div class="fl-score-row">
-        ${[1,2,3,4,5,6,7,8,9].map(n=>`<div class="fl-score-btn ${score===n?'sel':''}" onclick="sv('${wk_key}.${p.key}',${n});renderAll()">${n}</div>`).join('')}
-      </div>
+      <div class="fl-score-row">${btns}</div>
     </div>`;
   });
 
@@ -1127,12 +1174,13 @@ function renderSettings(){
       <input type="text" id="settingsName" value="${esc(userName)}" placeholder="Your first name">
     </div>
     <div style="margin-bottom:10px;padding:10px 12px;background:var(--cream);border-radius:8px;border:1px solid var(--border)">
-      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:3px">Training started</div>
-      <div style="font-size:14px;font-weight:700;color:var(--g)">${startFormatted}</div>
-      <div style="font-size:11px;color:var(--muted);margin-top:2px">Week ${weekNum} of training · ${Math.max(0,Math.ceil((RACE_DATE-new Date())/(24*60*60*1000)))} days to race</div>
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:3px">Training started · Week ${weekNum}</div>
+      <div style="font-size:13px;font-weight:700;color:var(--g);margin-bottom:6px">${startFormatted}</div>
+      <label class="lbl">Change start date</label>
+      <input type="date" id="settingsStartDate" value="${startDate}" style="margin-bottom:6px;padding:8px 10px;border-radius:6px;border:1px solid var(--border);background:white;font-size:13px;width:100%;outline:none">
     </div>
-    <button onclick="saveName()" style="padding:8px 16px;border-radius:7px;border:none;background:var(--g);color:white;font-size:12px;font-weight:700;cursor:pointer">Save name</button>
-    <div id="nameMsg" style="font-size:11px;color:var(--g);margin-top:5px;display:none">Name updated ✓</div>
+    <button onclick="saveName()" style="padding:8px 16px;border-radius:7px;border:none;background:var(--g);color:white;font-size:12px;font-weight:700;cursor:pointer">Save profile</button>
+    <div id="nameMsg" style="font-size:11px;color:var(--g);margin-top:5px;display:none">Profile updated ✓</div>
   </div></div>`;
 
   // INJURIES
@@ -1209,16 +1257,19 @@ function renderSettings(){
 
 function saveName(){
   const newName=document.getElementById('settingsName').value.trim();
+  const dateEl=document.getElementById('settingsStartDate');
   if(!newName)return;
   userName=newName;
   document.getElementById('userBdg').textContent=userName+' · logout';
   let profile={};
   try{const p=localStorage.getItem('ohs_user_'+pin);if(p)profile=JSON.parse(p);}catch(e){}
   profile.name=newName;
+  if(dateEl&&dateEl.value)profile.startDate=dateEl.value;
   try{localStorage.setItem('ohs_user_'+pin,JSON.stringify(profile));}catch(e){}
   if(SHEET)jsonp(SHEET+'?action=set&key='+encodeURIComponent(userKey())+'&value='+encodeURIComponent(JSON.stringify(profile))).catch(()=>{});
   const msg=document.getElementById('nameMsg');
   msg.style.display='block';setTimeout(()=>msg.style.display='none',2000);
+  renderAll();
 }
 
 function saveInjuryOther(val){
