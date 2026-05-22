@@ -751,7 +751,14 @@ async function doSave(){
   saveUserProfile();
 }
 function saveUserProfile(){
-  const profile={name:userName,pin,tier:userTier,lastSeen:new Date().toISOString()};
+  // Always load existing profile first to preserve birthday, quizAnswers, injuries etc
+  let profile={};
+  try{const p=localStorage.getItem(userKey());if(p)profile=JSON.parse(p);}catch(e){}
+  // Only update the fields we manage here — never wipe birthday or quiz data
+  profile.name=userName;
+  profile.pin=pin;
+  profile.tier=userTier;
+  profile.lastSeen=new Date().toISOString();
   try{localStorage.setItem(userKey(),JSON.stringify(profile));}catch(e){}
   if(SHEET){jsonp(SHEET+'?action=set&key='+encodeURIComponent(userKey())+'&value='+encodeURIComponent(JSON.stringify(profile))).catch(()=>{})}
   registerUser();
@@ -1135,7 +1142,7 @@ function submitQuiz(){
       <div class="tier-badge">${tier.emoji}</div>
       <div class="tier-name">Tier ${userTier} — ${tier.name}</div>
       <div class="tier-desc">${tier.desc}</div>
-      <div style="font-size:12px;color:rgba(255,255,255,.6);margin-bottom:14px">Score: ${score}/27 · You can retake this anytime to level up</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.6);margin-bottom:14px">Score: ${score}/57 · You can retake this anytime to level up</div>
     </div>
     <div class="card" style="margin-bottom:12px">
       <div style="font-size:12px;color:#555;line-height:1.7">
@@ -1804,19 +1811,23 @@ function renderSettings(){
 
 function saveName(){
   const newName=document.getElementById('settingsName').value.trim();
-  const dateEl=document.getElementById('settingsStartDate');
+  const bdEl=document.getElementById('settingsBirthday');
   if(!newName)return;
   userName=newName;
   document.getElementById('userBdg').textContent=userName+' · logout';
   let profile={};
   try{const p=localStorage.getItem('ohs_user_'+pin);if(p)profile=JSON.parse(p);}catch(e){}
   profile.name=newName;
-  if(dateEl&&dateEl.value)profile.startDate=dateEl.value;
+  if(bdEl&&bdEl.value){
+    profile.birthday=bdEl.value;
+    profile.age=Math.floor((new Date()-new Date(bdEl.value))/(365.25*24*60*60*1000));
+  }
   try{localStorage.setItem('ohs_user_'+pin,JSON.stringify(profile));}catch(e){}
   if(SHEET)jsonp(SHEET+'?action=set&key='+encodeURIComponent(userKey())+'&value='+encodeURIComponent(JSON.stringify(profile))).catch(()=>{});
+  registerUser();
   const msg=document.getElementById('nameMsg');
   msg.style.display='block';setTimeout(()=>msg.style.display='none',2000);
-  renderAll();
+  renderSettings();
 }
 
 function saveInjuryOther(val){
