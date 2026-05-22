@@ -235,13 +235,21 @@ const TRAIN_START=new Date('2026-04-16'); // fallback only
 function getTrainStart(){
   try{
     const p=localStorage.getItem('ohs_user_'+pin);
-    if(p){const prof=JSON.parse(p);if(prof.startDate)return new Date(prof.startDate);}
+    if(p){
+      const prof=JSON.parse(p);
+      if(prof.startDate)return new Date(prof.startDate+'T12:00:00');
+    }
   }catch(e){}
-  return TRAIN_START;
+  // No start date set — return today so week = 1
+  const today=new Date();
+  today.setHours(12,0,0,0);
+  return today;
 }
 function getTrainingWeek(){
   const start=getTrainStart();
-  return Math.max(1,Math.ceil((new Date()-start)/(7*24*60*60*1000)));
+  const now=new Date();
+  if(now<start)return 1;
+  return Math.max(1,Math.ceil((now-start)/(7*24*60*60*1000)));
 }
 let _n=0;
 function jsonp(url,retries=2){return new Promise((res,rej)=>{const cb='_oh'+(++_n),s=document.createElement('script');const t=setTimeout(()=>{cleanup();if(retries>0)jsonp(url,retries-1).then(res).catch(rej);else rej(new Error('timeout'))},12000);function cleanup(){clearTimeout(t);delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);}window[cb]=d=>{cleanup();res(d);};s.src=url+(url.includes('?')?'&':'?')+'callback='+cb+'&t='+Date.now();s.onerror=()=>{cleanup();if(retries>0)jsonp(url,retries-1).then(res).catch(rej);else rej(new Error('err'));};document.head.appendChild(s);});}
@@ -388,7 +396,8 @@ const QUIZ_QUESTIONS=[
     {id:'q_squat',text:'Can you do 10 air squats with heels on the floor and chest up?',type:'yn'},
     {id:'q_pushup',text:'Can you do a pushup with your chest touching the floor?',type:'yn'},
     {id:'q_burpee',text:'Can you do a burpee and fully stand up at the top?',type:'yn'},
-    {id:'q_pullup',text:'Can you do 1 pull-up, or dead hang for 10 seconds?',type:'yn'},
+    {id:'q_pullup',text:'Can you do at least 1 full pull-up (chin over bar)?',type:'yn'},
+    {id:'q_deathang',text:'Can you dead hang from a bar for 10 seconds?',type:'yn'},
     {id:'q_lunge',text:'Can you do a lunge without your knee caving inward?',type:'yn'},
     {id:'q_toes',text:'Can you touch your toes standing with soft knees?',type:'yn'},
     {id:'q_overhead',text:'Can you raise both arms straight overhead without your lower back arching?',type:'yn'}
@@ -418,13 +427,11 @@ const QUIZ_QUESTIONS=[
 
 // ── FITNESS SCORE FRAMEWORK ───────────────────────────────
 const FITNESS_PILLARS=[
-  {letter:'F',word:'Focus',full:'Focus & Intention',desc:'Did you set daily intentions this week? How clear was your mind?',q:'Rate your mental focus and daily intention-setting this week'},
-  {letter:'I',word:'Intensity',full:'Intensity',desc:'Did you push yourself in workouts? Did you show up even when you didn\'t want to?',q:'Rate your workout intensity and consistency this week'},
-  {letter:'T',word:'Thought',full:'Thought & Mindset',desc:'Did you journal, reflect, or work on your mindset this week?',q:'Rate your mindset work, reflection, and positive self-talk'},
-  {letter:'N',word:'Nutrition',full:'Nutrition',desc:'Did you eat whole foods, hit your protein, and avoid junk most days?',q:'Rate your nutrition quality this week'},
-  {letter:'E',word:'Exercise',full:'Exercise',desc:'Did you complete your planned workouts?',q:'Rate your exercise completion vs your target this week'},
-  {letter:'S',word:'Sleep',full:'Sleep',desc:'Did you get 7–8 hours most nights? Did you feel rested?',q:'Rate your sleep quality and quantity this week'},
-  {letter:'S',word:'Supplementation',full:'Supplementation',desc:'Did you consistently take Digest-A-Meal, Muscle Rx, and your Custom Pak?',q:'Rate your supplement consistency this week'}
+  {letter:'F.I.T',key:'FIT',word:'Focused Intense Thought',full:'Focused Intense Thought',desc:'Did you show up with focus, intensity, and positive thought this week? Did you set intentions, push hard, and control your mindset?',q:'Rate your mental game this week — focus, intensity, and thought combined'},
+  {letter:'N',key:'N',word:'Nutrition',full:'Nutrition',desc:'Did you eat whole foods, hit your protein, and avoid junk most days?',q:'Rate your nutrition quality this week'},
+  {letter:'E',key:'E',word:'Exercise',full:'Exercise',desc:'Did you complete your planned workouts this week?',q:'Rate your exercise completion vs your weekly target'},
+  {letter:'S',key:'S1',word:'Supplementation',full:'Supplementation',desc:'Did you consistently take Digest-A-Meal, Muscle Rx, and your Custom Pak?',q:'Rate your supplement consistency this week'},
+  {letter:'S',key:'S2',word:'Sleep',full:'Sleep',desc:'Did you get 7-8 hours most nights? Did you wake up feeling rested?',q:'Rate your sleep quality and quantity this week'}
 ];
 
 const SUPPS=[
@@ -581,6 +588,18 @@ function launchApp(){
   document.getElementById('quizScreen').style.display='none';
   document.getElementById('mainApp').style.display='flex';
   document.getElementById('userBdg').textContent=userName+' · logout';
+  // Set start date to today if not already set
+  try{
+    const pk=localStorage.getItem('ohs_user_'+pin);
+    if(pk){
+      const prof=JSON.parse(pk);
+      if(!prof.startDate){
+        prof.startDate=new Date().toISOString().split('T')[0];
+        localStorage.setItem('ohs_user_'+pin,JSON.stringify(prof));
+        if(SHEET)jsonp(SHEET+'?action=set&key='+encodeURIComponent('ohs_user_'+pin)+'&value='+encodeURIComponent(JSON.stringify(prof))).catch(()=>{});
+      }
+    }
+  }catch(e){}
   sb('s','Connecting...');
   const tier=TIERS[userTier];
   document.getElementById('tierPill').textContent=tier.emoji+' '+tier.name;
