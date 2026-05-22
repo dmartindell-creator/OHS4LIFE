@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OHS4LIFE — Spartan Sprint Challenge</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f4f0;color:#1a1a1a;font-size:14px}
+:root{--g:#1a6b3a;--gl:#e8f5ee;--gm:#2a8a4a;--gd:#0f4023;--gold:#e8b830;--goldl:#fdf3cc;--goldd:#b8920f;--cream:#f5f4f0;--border:#e0ddd6;--text:#1a1a1a;--muted:#666}
+
+/* PIN SCREEN */
+.pin-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:14px;padding:2rem;background:linear-gradient(160deg,#0f4023 0%,#1a6b3a 60%,#2a8a4a 100%)}
+.app-logo{font-size:44px}
+.app-title{font-size:28px;font-weight:800;color:#e8b830;letter-spacing:-.5px;text-align:center}
+.app-sub{font-size:12px;color:rgba(255,255,255,.6);text-align:center;max-width:260px;line-height:1.6}
+.pin-card{background:white;border-radius:14px;padding:20px;width:100%;max-width:320px}
+.pin-card-title{font-size:11px;font-weight:700;color:var(--g);text-transform:uppercase;letter-spacing:.09em;margin-bottom:12px;text-align:center}
+input.pf{width:100%;text-align:center;font-size:22px;font-weight:700;letter-spacing:5px;padding:10px;border-radius:7px;border:1.5px solid var(--border);background:var(--cream);outline:none;margin-bottom:8px;color:var(--text)}
+input.pf:focus{border-color:var(--g)}
+input.nf{width:100%;font-size:14px;padding:10px 12px;border-radius:7px;border:1.5px solid var(--border);background:var(--cream);outline:none;margin-bottom:8px;color:var(--text)}
+input.nf:focus{border-color:var(--g)}
+.gbtn{width:100%;padding:11px;border-radius:8px;border:none;background:var(--gold);color:#0f4023;font-size:13px;font-weight:800;cursor:pointer;margin-bottom:6px}
+.gbtn:hover{background:var(--goldd);color:white}
+.gbtn.outline{background:transparent;border:2px solid var(--border);color:var(--muted)}
+.pin-div{display:flex;align-items:center;gap:8px;margin:6px 0}
+.pin-div-line{flex:1;height:1px;background:var(--border)}
+.pin-div-txt{font-size:10px;color:#aaa}
+.perr{font-size:11px;color:#c02828;background:#fceaea;padding:5px 10px;border-radius:5px;text-align:center}
+.pnote{font-size:10px;color:rgba(255,255,255,.4);text-align:center;max-width:260px;line-height:1.6}
+
+/* QUIZ SCREEN */
+.quiz-screen{display:none;min-height:100vh;background:var(--cream);padding:0 0 40px}
+.quiz-hdr{background:var(--g);padding:20px 16px 16px;color:white}
+.quiz-hdr-title{font-size:18px;font-weight:800;color:var(--gold);margin-bottom:4px}
+.quiz-hdr-sub{font-size:12px;color:rgba(255,255,255,.7)}
+.quiz-progress{height:4px;background:rgba(255,255,255,.2);border-radius:2px;margin-top:12px;overflow:hidden}
+.quiz-progress-fill{height:100%;background:var(--gold);border-radius:2px;transition:width .4s}
+.quiz-body{padding:16px;max-width:560px;margin:0 auto}
+.quiz-section{margin-bottom:20px}
+.quiz-sec-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--g);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.quiz-sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.quiz-q{background:white;border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:6px}
+.quiz-q-text{font-size:13px;font-weight:500;color:var(--text);margin-bottom:8px;line-height:1.5}
+.quiz-opts{display:flex;gap:6px;flex-wrap:wrap}
+.quiz-opt{padding:5px 12px;border-radius:20px;border:1.5px solid var(--border);background:white;font-size:12px;cursor:pointer;color:var(--muted);transition:all .15s}
+.quiz-opt.sel{background:var(--g);border-color:var(--g);color:white;font-weight:600}
+.quiz-opt-yn{padding:5px 14px;border-radius:20px;border:1.5px solid var(--border);background:white;font-size:12px;cursor:pointer;color:var(--muted)}
+.quiz-opt-yn.sel-y{background:var(--g);border-color:var(--g);color:white;font-weight:600}
+.quiz-opt-yn.sel-n{background:#fceaea;border-color:#c02828;color:#c02828;font-weight:600}
+.quiz-submit{width:100%;padding:14px;border-radius:10px;border:none;background:var(--g);color:white;font-size:15px;font-weight:800;cursor:pointer;margin-top:10px}
+.tier-result{background:var(--g);border-radius:14px;padding:20px;margin:16px 0;color:white;text-align:center}
+.tier-badge{font-size:36px;margin-bottom:8px}
+.tier-name{font-size:22px;font-weight:800;color:var(--gold);margin-bottom:6px}
+.tier-desc{font-size:12px;color:rgba(255,255,255,.8);line-height:1.6;margin-bottom:12px}
+
+/* MAIN APP */
+.app{display:none;min-height:100vh;flex-direction:column}
+.hdr{background:var(--g);padding:10px 14px 8px;position:sticky;top:0;z-index:50}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.hdr-logo{font-size:14px;font-weight:800;color:var(--gold)}
+.hdr-user{font-size:10px;color:rgba(255,255,255,.6);background:rgba(255,255,255,.1);padding:2px 8px;border-radius:5px;cursor:pointer}
+.sync{font-size:10px;padding:3px 9px;border-radius:8px;font-weight:500}
+.s-ok{background:#0d2a1a;color:#4ade80}
+.s-save{background:#2a2200;color:#fbbf24}
+.s-err{background:#2a0d0d;color:#f87171}
+.ntabs{display:flex;gap:3px;overflow-x:auto;scrollbar-width:none;margin-bottom:6px}
+.ntabs::-webkit-scrollbar{display:none}
+.ntab{flex-shrink:0;padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);border:none;letter-spacing:.03em;text-transform:uppercase}
+.ntab.active{background:var(--gold);color:var(--gd, #0f4023)}
+.tier-pill{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px;background:rgba(255,255,255,.15);color:white}
+.wnav{display:flex;align-items:center;gap:6px;margin-top:4px}
+.wb{background:rgba(255,255,255,.1);border:none;border-radius:5px;width:24px;height:24px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.7)}
+.wlbl{font-size:10px;color:rgba(255,255,255,.6);font-weight:500;min-width:120px;text-align:center}
+.dtabs{display:flex;gap:3px;overflow-x:auto;scrollbar-width:none;margin-top:4px}
+.dtabs::-webkit-scrollbar{display:none}
+
+.main{padding:12px;max-width:580px;margin:0 auto;padding-bottom:40px;flex:1}
+.page{display:none;flex-direction:column;gap:5px}
+.page.active{display:flex}
+.spin-wrap{display:flex;align-items:center;justify-content:center;gap:8px;padding:48px;color:#999}
+.spinner{width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--g);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* CARDS */
+.card{background:white;border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:5px}
+.card-green{background:var(--gl);border-color:#a8d8b8}
+.card-gold{background:var(--goldl);border-color:#d4a020}
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.st{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);display:flex;align-items:center;gap:5px}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.sec{margin-bottom:10px}
+.dh{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.dn{font-size:24px;font-weight:800}
+.lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);display:block;margin-bottom:4px}
+textarea,input[type=text],input[type=number]{width:100%;background:var(--cream);border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-family:inherit;font-size:13px;color:var(--text);outline:none;resize:none}
+textarea:focus,input:focus{border-color:var(--g)}
+textarea{min-height:60px;line-height:1.6}
+input[type=number]{-moz-appearance:textfield}
+input[type=number]::-webkit-inner-spin-button{display:none}
+.pbar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin-top:4px}
+.pbf{height:100%;border-radius:3px;transition:width .3s;background:var(--g)}
+.pbf-gold{background:var(--gold)}
+
+/* HABIT ROW */
+.hr{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid #f0ede6;cursor:pointer;user-select:none}
+.hr:last-child{border-bottom:none;padding-bottom:0}
+.hr:first-child{padding-top:0}
+.hc{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border);background:white;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:white}
+.hc.on{background:var(--g);border-color:var(--g)}
+.hl{flex:1;font-size:13px;color:#444}
+.hl.done{text-decoration:line-through;color:#bbb}
+.htag{font-size:10px;padding:2px 7px;border-radius:5px;background:var(--cream);color:var(--muted);border:1px solid var(--border);white-space:nowrap}
+
+/* WORKOUT */
+.ex-card{background:white;border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:6px}
+.ex-phase{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--g);margin-bottom:5px;display:flex;align-items:center;justify-content:space-between}
+.ex-list{display:flex;flex-direction:column;gap:3px}
+.ex-row{display:flex;align-items:flex-start;gap:8px;padding:5px 0;border-bottom:1px solid #f5f4f0}
+.ex-row:last-child{border-bottom:none}
+.ex-letter{font-size:10px;font-weight:700;color:white;background:var(--g);border-radius:3px;padding:1px 5px;flex-shrink:0;margin-top:1px}
+.ex-name{flex:1}
+.ex-name-txt{font-size:12px;font-weight:600;color:var(--text)}
+.ex-sets{font-size:11px;color:var(--muted)}
+.ex-note{font-size:10px;color:var(--g);font-style:italic;margin-top:1px}
+.log-row{display:grid;grid-template-columns:auto 1fr 1fr;gap:4px;margin-top:4px}
+.log-row input{padding:4px 6px;font-size:11px;text-align:center}
+
+/* FITNESS SCORE */
+.fitness-letter{background:var(--g);border-radius:10px;padding:12px;margin-bottom:6px}
+.fl-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.fl-letter{font-size:28px;font-weight:900;color:var(--gold);line-height:1}
+.fl-word{font-size:11px;font-weight:700;color:white;text-transform:uppercase;letter-spacing:.06em}
+.fl-desc{font-size:11px;color:rgba(255,255,255,.7);line-height:1.5;margin-bottom:8px}
+.fl-score-row{display:flex;gap:4px}
+.fl-score-btn{flex:1;padding:6px 2px;border-radius:5px;border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:rgba(255,255,255,.5);font-size:11px;font-weight:700;cursor:pointer;text-align:center}
+.fl-score-btn.sel{background:var(--gold);border-color:var(--gold);color:#0f4023}
+
+/* LEADERBOARD */
+.lb-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #f0ede6}
+.lb-row:last-child{border-bottom:none}
+.lb-rank{font-size:18px;font-weight:800;width:28px;text-align:center;flex-shrink:0}
+.lb-name{flex:1;font-size:13px;font-weight:600}
+.lb-tier{font-size:10px;padding:2px 7px;border-radius:10px;background:var(--gl);color:var(--g);font-weight:600;flex-shrink:0}
+.lb-val{font-size:13px;font-weight:700;color:var(--g);flex-shrink:0}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+.stat{background:white;border:1px solid var(--border);border-radius:8px;padding:9px 10px;text-align:center}
+.snum{font-size:20px;font-weight:800;color:var(--g)}
+.slbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+.note{font-size:11px;color:var(--muted);padding:8px 11px;background:var(--cream);border-radius:6px;border:1px solid var(--border);line-height:1.6;margin:4px 0}
+.divider{height:1px;background:var(--border);margin:12px 0}
+.supp-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #f0ede6}
+.supp-row:last-child{border-bottom:none}
+.supp-icon{width:28px;height:28px;border-radius:6px;background:var(--gl);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.supp-name{flex:1;font-size:12px;font-weight:600;color:var(--text)}
+.supp-time{font-size:10px;color:var(--muted)}
+.vl{display:inline-flex;align-items:center;gap:3px;font-size:11px;color:var(--g);text-decoration:none;border:1px solid #a8d8b8;border-radius:5px;padding:3px 8px;margin:3px 2px 0 0;background:var(--gl)}
+.time-badge{font-size:10px;font-weight:600;color:var(--g);background:var(--gl);padding:2px 7px;border-radius:5px;border:1px solid #a8d8b8}
+.week-badge{font-size:10px;font-weight:700;color:var(--goldd);background:var(--goldl);padding:2px 8px;border-radius:5px;border:1px solid #d4a020}
+</style>
+</head>
+<body>
+
+<!-- PIN SCREEN -->
+<div id="pinScreen" class="pin-screen">
+  <div class="app-logo">🏔️</div>
+  <div class="app-title">OHS4LIFE</div>
+  <div class="app-sub">Spartan Sprint Challenge · Nov 21 · Train together. Finish together.</div>
+  <div class="pin-card">
+    <div class="pin-card-title">Enter your PIN</div>
+    <input class="pf" id="pinInput" type="number" placeholder="PIN">
+    <button class="gbtn" onclick="enterPin()">Let's Go</button>
+    <div class="pin-div"><div class="pin-div-line"></div><div class="pin-div-txt">New? Create account</div><div class="pin-div-line"></div></div>
+    <input class="nf" id="newName" type="text" placeholder="Your first name">
+    <input class="pf" id="newPin" type="number" placeholder="Pick a PIN" style="letter-spacing:5px">
+    <button class="gbtn outline" onclick="createAccount()">Create account</button>
+    <div id="pinErr" class="perr" style="display:none;margin-top:6px"></div>
+  </div>
+  <div class="pnote">Same PIN every time. Share it with no one — it's yours.</div>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div id="quizScreen" class="quiz-screen">
+  <div class="quiz-hdr">
+    <div class="quiz-hdr-title">Fitness Assessment</div>
+    <div class="quiz-hdr-sub">Answer honestly — this builds your personal training plan</div>
+    <div class="quiz-progress"><div class="quiz-progress-fill" id="quizProgress" style="width:0%"></div></div>
+  </div>
+  <div class="quiz-body" id="quizBody"></div>
+</div>
+
+<!-- MAIN APP -->
+<div id="mainApp" class="app">
+  <div class="hdr">
+    <div class="hdr-top">
+      <div class="hdr-logo">🏔️ OHS4LIFE</div>
+      <div style="display:flex;align-items:center;gap:7px">
+        <div class="hdr-user" id="userBdg" onclick="logout()">— · logout</div>
+        <div id="syncBadge" class="sync s-save">...</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+      <div class="tier-pill" id="tierPill">Tier —</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.5)" id="raceCountdown"></div>
+    </div>
+    <div class="ntabs" id="navTabs">
+      <button class="ntab active" onclick="setPage('daily',this)">Daily</button>
+      <button class="ntab" onclick="setPage('fitness',this)">F.I.T.N.E.S.S</button>
+      <button class="ntab" onclick="setPage('spartan',this)">Spartan</button>
+      <button class="ntab" onclick="setPage('leaderboard',this)">Squad</button>
+      <button class="ntab" onclick="setPage('settings',this)">⚙️ Me</button>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div class="wnav">
+        <button class="wb" onclick="changeWeek(-1)">‹</button>
+        <div class="wlbl" id="weekRange"></div>
+        <button class="wb" onclick="changeWeek(1)">›</button>
+      </div>
+      <div class="dtabs" id="dayTabsWrap"></div>
+    </div>
+  </div>
+  <div class="main">
+    <div id="page-daily" class="page active"><div id="dailyContent"><div class="spin-wrap"><div class="spinner"></div></div></div></div>
+    <div id="page-fitness" class="page"><div id="fitnessContent"></div></div>
+    <div id="page-spartan" class="page"><div id="spartanContent"></div></div>
+    <div id="page-leaderboard" class="page"><div id="lbContent"></div></div>
+    <div id="page-settings" class="page"><div id="settingsContent"></div></div>
+  </div>
+</div>
+
+<script>
+const SHEET='https://script.google.com/macros/s/AKfycbzZ3P6lgEuM94ySA5DMWur2LWCcfoFHbIuyP_1yxbHcyqutfsmqLJbJgccIR8ktA4FYsA/exec'; // ADD YOUR GOOGLE SHEET URL HERE
+const RACE_DATE=new Date('2026-11-21');
+const TRAIN_START=new Date('2026-04-16'); // fallback only
+function getTrainStart(){
+  try{
+    const p=localStorage.getItem('ohs_user_'+pin);
+    if(p){const prof=JSON.parse(p);if(prof.startDate)return new Date(prof.startDate);}
+  }catch(e){}
+  return TRAIN_START;
+}
+function getTrainingWeek(){
+  const start=getTrainStart();
+  return Math.max(1,Math.ceil((new Date()-start)/(7*24*60*60*1000)));
+}
+let _n=0;
+function jsonp(url){return new Promise((res,rej)=>{const cb='_oh'+(++_n),s=document.createElement('script');const t=setTimeout(()=>{cleanup();rej(new Error('timeout'))},10000);function cleanup(){clearTimeout(t);delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);}window[cb]=d=>{cleanup();res(d);};s.src=url+(url.includes('?')?'&':'?')+'callback='+cb+'&t='+Date.now();s.onerror=()=>{cleanup();rej(new Error('err'));};document.head.appendChild(s);});}
+
+const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const SHORT=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+// ── TIER SYSTEM ──────────────────────────────────────────
+const TIERS={
+  1:{name:'Spark',emoji:'✨',desc:'Just getting started. Every step counts. We build the habit first.',color:'#5a8a6a'},
+  2:{name:'Rise',emoji:'🌱',desc:'Building momentum. You can move — now we teach your body to move better.',color:'#2a8a4a'},
+  3:{name:'Build',emoji:'💪',desc:'Solid foundation. Time to add intensity and start running.',color:'#1a6b3a'},
+  4:{name:'Drive',emoji:'🔥',desc:'Consistent and capable. Spartan-specific training begins now.',color:'#0f4023'},
+  5:{name:'Forge',emoji:'⚔️',desc:'Athletic and ready. Full Spartan circuits. No excuses.',color:'#0a2a16'}
+};
+
+// ── WORKOUTS BY TIER & DAY ────────────────────────────────
+// 3 workout days (Mon/Wed/Fri) + 1 cardio day (Sat) + rest other days
+const WORKOUTS={
+  1:{ // SPARK
+    1:{name:'Full Body Foundation',phases:[
+      {label:'Warm-up · 5 min',exs:[{l:'A',n:'March in place',s:'2 min',note:'Lift knees high, swing arms'},{l:'B',n:'Arm circles',s:'×10 each direction'},{l:'C',n:'Ankle rolls',s:'×10 each'}]},
+      {label:'Proprioception · Balance',exs:[{l:'A',n:'Single leg stand',s:'3×10s each leg — eyes open',note:'Touch wall if needed'},{l:'B',n:'Heel-to-toe walk',s:'10 steps forward + back',note:'Like a sobriety test — eyes forward'},{l:'C',n:'Weight shifts side to side',s:'2×10 — slow and controlled'}]},
+      {label:'Strength · Bodyweight',exs:[{l:'A',n:'Sit-to-stand from chair',s:'3×10 — no hands',note:'This IS a squat'},{l:'B',n:'Wall pushup',s:'3×10'},{l:'C',n:'Standing hip hinge',s:'3×10 — bend at hips, soft knees'}]},
+      {label:'Cool down',exs:[{l:'A',n:'Seated hamstring stretch',s:'30s each'},{l:'B',n:'Doorway chest stretch',s:'30s'}]}
+    ]},
+    3:{name:'Move & Balance',phases:[
+      {label:'Warm-up · 5 min',exs:[{l:'A',n:'Walk in place',s:'2 min'},{l:'B',n:'Leg swings',s:'×10 each direction'},{l:'C',n:'Hip circles',s:'×10 each side'}]},
+      {label:'Proprioception · Balance',exs:[{l:'A',n:'Single leg stand eyes closed',s:'3×5s each — progress from eyes open',note:'Touch wall for safety'},{l:'B',n:'Tandem stance hold',s:'3×15s — one foot directly in front of other'},{l:'C',n:'Head turns on 1 leg',s:'3×5 each — turn head while balancing'}]},
+      {label:'Strength',exs:[{l:'A',n:'Supported squat (hold chair)',s:'3×10'},{l:'B',n:'Incline pushup (hands on bench)',s:'3×8'},{l:'C',n:'Standing calf raise',s:'3×15'}]},
+      {label:'Core',exs:[{l:'A',n:'Seated knee lifts',s:'3×10 each'},{l:'B',n:'Standing side bend',s:'3×10 each side'}]}
+    ]},
+    5:{name:'Cardio Base + Strength',phases:[
+      {label:'Cardio warm-up',exs:[{l:'A',n:'Walk brisk',s:'5 min'}]},
+      {label:'Proprioception',exs:[{l:'A',n:'Single leg balance with arm reach',s:'3×10s each — reach arm forward while standing on 1 leg',note:'Build spatial awareness'},{l:'B',n:'Slow lateral step',s:'2×10 each — step sideways slow + controlled'}]},
+      {label:'Circuit · 2 rounds',exs:[{l:'A',n:'Sit-to-stand',s:'×12'},{l:'B',n:'Wall pushup',s:'×12'},{l:'C',n:'Standing march',s:'×20 steps'},{l:'D',n:'Calf raises',s:'×15'}]},
+      {label:'Spartan prep',exs:[{l:'A',n:'Practice getting up from floor',s:'5× — this is an obstacle skill',note:'Spartan walls require floor transitions'}]}
+    ]},
+    6:{name:'Walk Day',phases:[
+      {label:'Your mission',exs:[{l:'A',n:'Walk continuously',s:'20–30 min goal',note:'Conversational pace. This is your cardio base.'},{l:'B',n:'Every 5 min — pause and balance',s:'10s each leg',note:'Turn your walk into proprioception training'}]}
+    ]}
+  },
+  2:{ // RISE
+    1:{name:'Strength + Balance',phases:[
+      {label:'Activation · 5 min',exs:[{l:'A',n:'Leg swings fwd/bck',s:'×10 each'},{l:'B',n:'Hip circles',s:'×10 each'},{l:'C',n:'Arm circles',s:'×10 each'}]},
+      {label:'Proprioception',exs:[{l:'A',n:'Single leg balance',s:'3×15s each — eyes open then closed',note:'Progress to eyes closed week 3+'},{l:'B',n:'Single leg heel raise',s:'3×10 each — slow lower',note:'Ankle stability'},{l:'C',n:'Lateral balance reach',s:'3×8 each — stand on 1 leg, reach other foot out to side'}]},
+      {label:'Strength · Machine/Bodyweight',exs:[{l:'A',n:'Goblet squat (light DB)',s:'3×12'},{l:'B',n:'DB row (each arm)',s:'3×10'},{l:'C',n:'Pushup (modified ok)',s:'3×8'},{l:'D',n:'Glute bridge',s:'3×15'}]},
+      {label:'Core',exs:[{l:'A',n:'Plank hold',s:'3×20s'},{l:'B',n:'Dead bug',s:'3×8 each'}]}
+    ]},
+    3:{name:'Pull + Core + Balance',phases:[
+      {label:'Activation',exs:[{l:'A',n:'Band pull-aparts',s:'2×15'},{l:'B',n:'Leg swings',s:'×10 each'},{l:'C',n:'Thoracic rotation',s:'×10 each side'}]},
+      {label:'Proprioception',exs:[{l:'A',n:'Single leg RDL (no weight)',s:'3×8 each — hinge at hip, free leg extends back',note:'Biggest balance challenge yet'},{l:'B',n:'Tandem walk eyes closed',s:'2×10 steps',note:'Heel to toe, hands out for balance'}]},
+      {label:'Strength',exs:[{l:'A',n:'Lat pulldown or band pull-down',s:'3×10'},{l:'B',n:'Seated cable row or band row',s:'3×12'},{l:'C',n:'Face pulls or band pull-apart',s:'3×15'}]},
+      {label:'Core + Spartan prep',exs:[{l:'A',n:'Plank',s:'3×25s'},{l:'B',n:'Hanging knee raise or lying knee raise',s:'3×10'},{l:'C',n:'Burpee practice — slow',s:'3×3',note:'Learn the movement. Step back, step forward.'}]}
+    ]},
+    5:{name:'Push + Cardio + Balance',phases:[
+      {label:'Warm-up',exs:[{l:'A',n:'5 min bike or row machine',s:'Easy pace'}]},
+      {label:'Proprioception',exs:[{l:'A',n:'Single leg squat to box (sit then stand)',s:'3×8 each',note:'Control the descent'},{l:'B',n:'Eyes-closed single leg balance',s:'3×10s each — reach arms forward'}]},
+      {label:'Push',exs:[{l:'A',n:'DB chest press or pushup',s:'3×10'},{l:'B',n:'DB shoulder press',s:'3×10'},{l:'C',n:'Tricep pushdown or dip',s:'3×10'}]},
+      {label:'Cardio finisher',exs:[{l:'A',n:'Walk/jog intervals',s:'10 min — 1 min jog / 1 min walk',note:'This is your Spartan run base'}]}
+    ]},
+    6:{name:'Run/Walk + Obstacles',phases:[
+      {label:'Cardio',exs:[{l:'A',n:'Walk/jog',s:'25–30 min — aim for 50% jogging'},{l:'B',n:'Balance challenge during walk',s:'Every 5 min — 10s single leg stand'}]},
+      {label:'Obstacle prep',exs:[{l:'A',n:'Crawl under table or low object',s:'3× — bear crawl'},{l:'B',n:'Step over obstacles',s:'5× high step each leg'}]}
+    ]}
+  },
+  3:{ // BUILD
+    1:{name:'Legs + Shoulders + Propioception',phases:[
+      {label:'Activation',exs:[{l:'A',n:'Backward walking',s:'2 min — knees over toes'},{l:'B',n:'Tibialis raises',s:'2×15'},{l:'C',n:'Band pull-aparts',s:'2×15'}]},
+      {label:'Proprioception',exs:[{l:'A',n:'Single leg RDL with light DB',s:'3×8 each',note:'Control = more important than weight'},{l:'B',n:'Bosu or foam pad single leg stand',s:'3×15s each',note:'Unstable surface challenge'},{l:'C',n:'Lateral lunge to balance',s:'3×8 each — lunge side, return to single leg stand'}]},
+      {label:'Strength',exs:[{l:'A',n:'Goblet squat',s:'4×12'},{l:'B',n:'DB shoulder press',s:'3×10'},{l:'C',n:'Romanian deadlift',s:'3×10'},{l:'D',n:'Lateral raises',s:'3×12'}]},
+      {label:'Spartan finisher',exs:[{l:'A',n:'Burpees',s:'3×8'},{l:'B',n:'Farmer carry',s:'2×40 steps — DB each hand'}]}
+    ]},
+    3:{name:'Back + Core + Balance',phases:[
+      {label:'Activation',exs:[{l:'A',n:'Dead hang',s:'2×20s'},{l:'B',n:'Face pulls',s:'2×15'},{l:'C',n:'Hip 90/90 stretch',s:'45s each'}]},
+      {label:'Proprioception',exs:[{l:'A',n:'Single leg RDL to row',s:'3×8 each — hinge + row DB simultaneously',note:'Combines balance + pull'},{l:'B',n:'Standing on 1 leg — head rotations',s:'3×8 each — proprioception challenge'}]},
+      {label:'Strength',exs:[{l:'A',n:'Lat pulldown',s:'4×10'},{l:'B',n:'Seated row',s:'3×12'},{l:'C',n:'Face pulls',s:'3×15'}]},
+      {label:'Core + Obstacle',exs:[{l:'A',n:'Plank',s:'3×40s'},{l:'B',n:'Hanging knee raise',s:'3×12'},{l:'C',n:'Rope or towel pull (seated)',s:'3×10',note:'Rope climb prep'},{l:'D',n:'Burpees',s:'3×10'}]}
+    ]},
+    5:{name:'Chest + Run + Balance',phases:[
+      {label:'Activation',exs:[{l:'A',n:'Jog 5 min',s:'Easy'},{l:'B',n:'Dynamic lunge',s:'×10 each'}]},
+      {label:'Proprioception',exs:[{l:'A',n:'Split squat hold',s:'3×15s each — front foot elevated, balance at bottom',note:'Lunge stability'},{l:'B',n:'Single leg calf raise',s:'3×12 each — slow eccentric'}]},
+      {label:'Strength',exs:[{l:'A',n:'DB bench press',s:'3×10'},{l:'B',n:'Cable crossover or pec deck',s:'3×12'},{l:'C',n:'Tricep dips',s:'3×8'}]},
+      {label:'Run intervals',exs:[{l:'A',n:'Run/jog intervals',s:'15 min — 2 min run / 1 min walk',note:'Build the run base for Spartan 5K'}]}
+    ]},
+    6:{name:'Long Run + Obstacle Drills',phases:[
+      {label:'Run',exs:[{l:'A',n:'Continuous jog',s:'20–25 min — easy pace'},{l:'B',n:'Proprioception break every 5 min',s:'Single leg RDL ×5 each side'}]},
+      {label:'Obstacle prep',exs:[{l:'A',n:'Bear crawl',s:'3×20 steps'},{l:'B',n:'Burpees',s:'3×10'},{l:'C',n:'Box jump or step up',s:'3×8'}]}
+    ]}
+  },
+  4:{ // DRIVE
+    1:{name:'Power Lower + Propioception',phases:[
+      {label:'Activation',exs:[{l:'A',n:'Backward walking',s:'2 min'},{l:'B',n:'Tibialis raises',s:'2×20'},{l:'C',n:'ATG split squat hold',s:'20s each'}]},
+      {label:'Proprioception',exs:[{l:'A',n:'Single leg squat progression',s:'3×6 each — pistol squat practice to box',note:'Control matters more than depth'},{l:'B',n:'BOSU single leg squat',s:'3×8 each'},{l:'C',n:'Lateral bound + stick landing',s:'3×5 each — jump sideways, land on 1 foot, hold 2s'}]},
+      {label:'Strength',exs:[{l:'A',n:'Barbell or DB squat',s:'4×8'},{l:'B',n:'Romanian deadlift',s:'3×10'},{l:'C',n:'Bulgarian split squat',s:'3×8 each'},{l:'D',n:'Box jump',s:'3×8'}]},
+      {label:'Spartan circuit',exs:[{l:'A',n:'Burpees',s:'3×15'},{l:'B',n:'Farmer carry heavy',s:'2×40 steps'},{l:'C',n:'Dead hang',s:'Max time ×3'}]}
+    ]},
+    3:{name:'Pull + Grip + Balance',phases:[
+      {label:'Activation',exs:[{l:'A',n:'Dead hang',s:'2×30s'},{l:'B',n:'Band pull-aparts',s:'2×15'},{l:'C',n:'Thoracic CARs',s:'×10'}]},
+      {label:'Proprioception',exs:[{l:'A',n:'Single leg RDL to row — eyes closed',s:'3×6 each',note:'Eyes closed = maximum proprioception demand'},{l:'B',n:'Standing on 1 leg — catch and throw',s:'3×10 each — toss ball against wall or to partner'}]},
+      {label:'Strength',exs:[{l:'A',n:'Pull-ups or lat pulldown',s:'4×8'},{l:'B',n:'Chest-supported row',s:'3×10'},{l:'C',n:'Face pulls',s:'3×15'},{l:'D',n:'Towel pull (grip training)',s:'3×max'}]},
+      {label:'Obstacle circuit',exs:[{l:'A',n:'Rope climb or towel pull',s:'3×max'},{l:'B',n:'Burpees',s:'3×15'},{l:'C',n:'Sandbag carry',s:'2×40 steps'}]}
+    ]},
+    5:{name:'Push + Run + Power',phases:[
+      {label:'Activation',exs:[{l:'A',n:'Run 5 min easy',s:''},{l:'B',n:'Dynamic lunge + rotation',s:'×10 each'}]},
+      {label:'Proprioception',exs:[{l:'A',n:'Single leg jump + land',s:'3×5 each — controlled landing, absorb with knee',note:'Obstacle descent training'},{l:'B',n:'Reactive balance — partner tap or self-tap',s:'3×10 — partner taps shoulder, maintain balance'}]},
+      {label:'Strength',exs:[{l:'A',n:'Bench press',s:'4×8'},{l:'B',n:'Dips',s:'3×10'},{l:'C',n:'Overhead press',s:'3×10'}]},
+      {label:'Run',exs:[{l:'A',n:'Run intervals',s:'20 min — 3 min run / 1 min walk'},{l:'B',n:'Hill run or incline treadmill',s:'2×3 min',note:'Spartan terrain prep'}]}
+    ]},
+    6:{name:'Spartan Simulation Run',phases:[
+      {label:'Run + Obstacles',exs:[{l:'A',n:'Run',s:'30 min continuous — Spartan pace'},{l:'B',n:'Every 10 min — stop and do',s:'10 burpees + 20 air squats + 10 pushups',note:'Simulate obstacle penalty stops'}]},
+      {label:'Proprioception cooldown',exs:[{l:'A',n:'Single leg balance',s:'60s each — after run proprioception is key for injury prevention'},{l:'B',n:'Single leg RDL',s:'×10 each — fatigue state balance work'}]}
+    ]}
+  },
+  5:{ // FORGE
+    1:{name:'Explosive Lower + ATG',phases:[
+      {label:'ATG activation',exs:[{l:'A',n:'Backward sled or backward walking',s:'3 min'},{l:'B',n:'Tibialis raises',s:'2×25'},{l:'C',n:'Reverse Nordic curl',s:'2×8'}]},
+      {label:'Proprioception — elite',exs:[{l:'A',n:'Single leg squat — full pistol progression',s:'3×6 each',note:'Full range pistol squat or max depth'},{l:'B',n:'Jump + single leg landing hold',s:'3×6 each — bilateral jump, single land, 3s hold'},{l:'C',n:'Reactive lateral bound',s:'3×6 each — explosive, single leg landing'}]},
+      {label:'Power + Strength',exs:[{l:'A',n:'Barbell squat',s:'5×5 heavy'},{l:'B',n:'Box jump',s:'4×6 max height'},{l:'C',n:'Bulgarian split squat',s:'3×8 each'},{l:'D',n:'Trap bar deadlift',s:'3×6'}]},
+      {label:'Spartan circuit',exs:[{l:'A',n:'Burpees',s:'3×20'},{l:'B',n:'Sandbag carry upstairs',s:'3× — or heavy farmer carry'},{l:'C',n:'Dead hang to knee raise',s:'3×max'}]}
+    ]},
+    3:{name:'Pull Power + Rope + Balance',phases:[
+      {label:'Activation',exs:[{l:'A',n:'Dead hang',s:'2×45s'},{l:'B',n:'Scapular pull-ups',s:'2×10'},{l:'C',n:'Face pulls',s:'2×15'}]},
+      {label:'Proprioception — elite',exs:[{l:'A',n:'Single leg RDL — eyes closed + reach',s:'3×8 each',note:'Eyes closed, reach arms forward as you hinge'},{l:'B',n:'Unstable surface single leg squat',s:'3×6 each — BOSU or folded mat'}]},
+      {label:'Strength',exs:[{l:'A',n:'Weighted pull-ups',s:'4×6'},{l:'B',n:'Chest-to-bar pull-ups',s:'3×max'},{l:'C',n:'Rope climb',s:'3× full climb or towel pull max'}]},
+      {label:'Spartan finisher',exs:[{l:'A',n:'Full Spartan circuit',s:'3 rounds: 10 burpees + 10 pushups + 10 pull-ups + 20 air squats'},{l:'B',n:'Farmer carry heavy',s:'3×60 steps'}]}
+    ]},
+    5:{name:'Full Spartan Simulation',phases:[
+      {label:'Warm-up run',exs:[{l:'A',n:'Jog 10 min easy',s:''}]},
+      {label:'Proprioception',exs:[{l:'A',n:'Fatigue-state balance',s:'After run — single leg hold 30s each, no touching down'},{l:'B',n:'Jump + obstacles + land',s:'3× — jump over low barrier, single land, hold'}]},
+      {label:'Obstacle circuit',exs:[{l:'A',n:'Run 800m + 10 burpees',s:'3 rounds'},{l:'B',n:'Rope climb or towel pull',s:'3×max'},{l:'C',n:'Sandbag carry',s:'3×50 steps'},{l:'D',n:'30 burpees for time',s:'Your penalty training'}]}
+    ]},
+    6:{name:'Long Run + Full Spartan',phases:[
+      {label:'Run',exs:[{l:'A',n:'Continuous run',s:'35–40 min at Spartan race pace'},{l:'B',n:'Obstacle stops every 10 min',s:'15 burpees + 15 pushups + 20 air squats'}]},
+      {label:'Proprioception cooldown',exs:[{l:'A',n:'Post-run single leg balance',s:'90s each — fatigue is the real test'},{l:'B',n:'Single leg RDL',s:'×12 each — post-run neural reset'}]}
+    ]}
+  }
+};
+
+// ── QUIZ QUESTIONS ────────────────────────────────────────
+const QUIZ_QUESTIONS=[
+  {section:'Movement Quality',questions:[
+    {id:'q_squat',text:'Can you do 10 air squats with heels on the floor and chest up?',type:'yn'},
+    {id:'q_pushup',text:'Can you do a pushup with your chest touching the floor?',type:'yn'},
+    {id:'q_burpee',text:'Can you do a burpee and fully stand up at the top?',type:'yn'},
+    {id:'q_pullup',text:'Can you do 1 pull-up, or dead hang for 10 seconds?',type:'yn'},
+    {id:'q_lunge',text:'Can you do a lunge without your knee caving inward?',type:'yn'},
+    {id:'q_toes',text:'Can you touch your toes standing with soft knees?',type:'yn'},
+    {id:'q_overhead',text:'Can you raise both arms straight overhead without your lower back arching?',type:'yn'}
+  ]},
+  {section:'Proprioception + Balance',questions:[
+    {id:'q_1leg_open',text:'Can you stand on 1 leg for 15 seconds with eyes open?',type:'yn'},
+    {id:'q_1leg_closed',text:'Can you stand on 1 leg for 10 seconds with eyes closed?',type:'yn'},
+    {id:'q_heel_toe',text:'Can you walk heel-to-toe in a straight line for 10 steps?',type:'yn'},
+    {id:'q_head_turn',text:'Can you turn your head side to side while balancing on 1 leg without falling?',type:'yn'},
+    {id:'q_rdl',text:'Can you do a single leg Romanian deadlift (hinge at hip, free leg extends back) without losing balance?',type:'yn'}
+  ]},
+  {section:'Cardio Base',questions:[
+    {id:'q_walk20',text:'Can you walk for 20 minutes without stopping or getting winded?',type:'yn'},
+    {id:'q_jog5',text:'Can you jog for 5 minutes without stopping?',type:'yn'},
+    {id:'q_run1',text:'Have you run a full mile in the last 6 months?',type:'yn'}
+  ]},
+  {section:'Lifestyle',questions:[
+    {id:'q_sleep',text:'How many hours of sleep do you get most nights?',type:'mc',opts:['Under 5','5–6 hours','7–8 hours','8+ hours']},
+    {id:'q_water',text:'How much water do you drink daily?',type:'mc',opts:['Under 32oz','32–64oz','64–96oz','96oz+']},
+    {id:'q_energy',text:'How would you rate your current energy levels?',type:'mc',opts:['1 — Exhausted','2 — Low','3 — Average','4 — Good','5 — Great']},
+    {id:'q_injury',text:'Do you have any current injuries or pain that limits movement?',type:'yn'},
+    {id:'q_injury_parts',text:'If yes — which areas? (tap all that apply)',type:'multi',opts:['Knee','Hip','Shoulder','Lower back','Ankle','Wrist / Elbow','Neck','General — doctor restrictions'],showIf:{id:'q_injury',val:'yes'}},
+    {id:'q_injury_other',text:'Anything else to describe your injury?',type:'text_optional',showIf:{id:'q_injury',val:'yes'}},
+    {id:'q_barrier',text:"What's your biggest barrier to fitness right now?",type:'mc',opts:['Not enough time','Lack of motivation','Don\'t know what to do','Physical limitations','None — I\'m ready']}
+  ]}
+];
+
+// ── FITNESS SCORE FRAMEWORK ───────────────────────────────
+const FITNESS_PILLARS=[
+  {letter:'F',word:'Focus',full:'Focus & Intention',desc:'Did you set daily intentions this week? How clear was your mind?',q:'Rate your mental focus and daily intention-setting this week'},
+  {letter:'I',word:'Intensity',full:'Intensity',desc:'Did you push yourself in workouts? Did you show up even when you didn\'t want to?',q:'Rate your workout intensity and consistency this week'},
+  {letter:'T',word:'Thought',full:'Thought & Mindset',desc:'Did you journal, reflect, or work on your mindset this week?',q:'Rate your mindset work, reflection, and positive self-talk'},
+  {letter:'N',word:'Nutrition',full:'Nutrition',desc:'Did you eat whole foods, hit your protein, and avoid junk most days?',q:'Rate your nutrition quality this week'},
+  {letter:'E',word:'Exercise',full:'Exercise',desc:'Did you complete your planned workouts?',q:'Rate your exercise completion vs your target this week'},
+  {letter:'S',word:'Sleep',full:'Sleep',desc:'Did you get 7–8 hours most nights? Did you feel rested?',q:'Rate your sleep quality and quantity this week'},
+  {letter:'S',word:'Supplementation',full:'Supplementation',desc:'Did you consistently take Digest-A-Meal, Muscle Rx, and your Custom Pak?',q:'Rate your supplement consistency this week'}
+];
+
+const SUPPS=[
+  {name:'Digest-A-Meal',icon:'🌿',time:'With each meal',note:'Take with every meal — breakfast, lunch, dinner. Breaks down all foods, eliminates gas and bloat.'},
+  {name:'Muscle Rx',icon:'💪',time:'Post-workout or daily',note:'Take after training for muscle recovery and protein synthesis. On rest days take with your largest meal.'},
+  {name:'Custom Pak',icon:'🧬',time:'Daily — with meal',note:'Your personalized nutrient pak based on your bloodwork. Take with food for best absorption.'}
+];
+
+let pin='',userName='',userTier=3,quizAnswers={},wOff=0,curDay=new Date().getDay(),state={},sTimer=null,loaded=false,curPage='daily';
+
+function wk(o=0){const n=new Date(),d=n.getDay(),s=new Date(n);s.setDate(n.getDate()-d+(o*7));return s.toISOString().split('T')[0];}
+function wDates(o=0){const n=new Date(),d=n.getDay(),s=new Date(n);s.setDate(n.getDate()-d+(o*7));return Array.from({length:7},(_,i)=>{const x=new Date(s);x.setDate(s.getDate()+i);return x;});}
+function fmtR(o){const d=wDates(o),op={month:'short',day:'numeric'};return d[1].toLocaleDateString('en-US',op)+' – '+d[6].toLocaleDateString('en-US',op);}
+function sb(s,m){const b=document.getElementById('syncBadge');if(!b)return;if(s==='ok'){b.className='sync s-ok';b.textContent='Synced ✓'}else if(s==='s'){b.className='sync s-save';b.textContent='Saving...'}else{b.className='sync s-err';b.textContent=m||'Local only'}}
+function userKey(){return 'ohs_user_'+pin;}
+function weekKey(){return 'ohs_week_'+pin+'_'+wk(wOff);}
+async function load(){
+  sb('s','Loading...');
+  try{const r=await jsonp(SHEET+'?action=get&key='+encodeURIComponent(weekKey()));if(r&&r.status==='found'&&r.value){state=JSON.parse(r.value);try{localStorage.setItem(weekKey(),r.value)}catch(e){}sb('ok');}
+  else{try{const l=localStorage.getItem(weekKey());state=l?JSON.parse(l):{}}catch(e){state={}}sb('ok');}}
+  catch(e){try{const l=localStorage.getItem(weekKey());state=l?JSON.parse(l):{}}catch(e2){state={}}sb('err','Local only');}
+  loaded=true;
+}
+function sched(){sb('s','Saving...');if(sTimer)clearTimeout(sTimer);sTimer=setTimeout(doSave,1200);}
+async function doSave(){
+  const p=JSON.stringify(state);try{localStorage.setItem(weekKey(),p)}catch(e){}
+  if(SHEET){try{const r=await jsonp(SHEET+'?action=set&key='+encodeURIComponent(weekKey())+'&value='+encodeURIComponent(p));sb(r&&r.status==='saved'?'ok':'err','Local only');}catch(e){sb('err','Local only');}}
+  saveUserProfile();
+}
+function saveUserProfile(){
+  const profile={name:userName,pin,tier:userTier,lastSeen:new Date().toISOString()};
+  try{localStorage.setItem(userKey(),JSON.stringify(profile));}catch(e){}
+  if(SHEET){jsonp(SHEET+'?action=set&key='+encodeURIComponent(userKey())+'&value='+encodeURIComponent(JSON.stringify(profile))).catch(()=>{})}
+  registerUser();
+}
+function registerUser(){
+  const listKey='ohs_users';
+  let users=[];try{const l=localStorage.getItem(listKey);if(l)users=JSON.parse(l);}catch(e){}
+  const idx=users.findIndex(u=>u.pin===pin);
+  const entry={name:userName,pin,tier:userTier};
+  if(idx>=0)users[idx]=entry;else users.push(entry);
+  try{localStorage.setItem(listKey,JSON.stringify(users));}catch(e){}
+  if(SHEET){jsonp(SHEET+'?action=set&key='+encodeURIComponent(listKey)+'&value='+encodeURIComponent(JSON.stringify(users))).catch(()=>{})}
+}
+function g(p,d=null){const pts=p.split('.');let o=state;for(const x of pts){if(o==null||typeof o!=='object')return d;o=o[x];}return o!=null?o:d;}
+function sv(p,v){const pts=p.split('.');let o=state;for(let i=0;i<pts.length-1;i++){if(!o[pts[i]])o[pts[i]]={};o=o[pts[i]];}o[pts[pts.length-1]]=v;sched();}
+function tog(p){sv(p,!g(p,false));}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function enterPin(){
+  const v=document.getElementById('pinInput').value.toString().trim();
+  const e=document.getElementById('pinErr');
+  if(v.length<4){e.textContent='PIN must be at least 4 digits';e.style.display='block';return;}
+  e.style.display='none';
+  const profileKey='ohs_user_'+v;
+  let profile=null;try{const l=localStorage.getItem(profileKey);if(l)profile=JSON.parse(l);}catch(e){}
+  if(profile&&profile.name){pin=v;userName=profile.name;userTier=profile.tier||3;launchApp();}
+  else{e.textContent='PIN not found. Create an account below.';e.style.display='block';}
+}
+function createAccount(){
+  const name=document.getElementById('newName').value.trim();
+  const newPin=document.getElementById('newPin').value.toString().trim();
+  const e=document.getElementById('pinErr');
+  if(!name){e.textContent='Enter your first name';e.style.display='block';return;}
+  if(newPin.length<4){e.textContent='PIN must be at least 4 digits';e.style.display='block';return;}
+  e.style.display='none';
+  pin=newPin;userName=name;userTier=3;
+  // Save start date as today
+  const profile={name,pin:newPin,tier:3,startDate:new Date().toISOString().split('T')[0],lastSeen:new Date().toISOString()};
+  try{localStorage.setItem('ohs_user_'+newPin,JSON.stringify(profile));}catch(e2){}
+  // Show quiz first
+  document.getElementById('pinScreen').style.display='none';
+  startQuiz();
+}
+document.getElementById('pinInput').addEventListener('keydown',e=>{if(e.key==='Enter')enterPin();});
+
+function launchApp(){
+  document.getElementById('pinScreen').style.display='none';
+  document.getElementById('quizScreen').style.display='none';
+  document.getElementById('mainApp').style.display='flex';
+  document.getElementById('userBdg').textContent=userName+' · logout';
+  const tier=TIERS[userTier];
+  document.getElementById('tierPill').textContent=tier.emoji+' '+tier.name;
+  document.getElementById('tierPill').style.background=tier.color;
+  const days=Math.max(0,Math.ceil((RACE_DATE-new Date())/(24*60*60*1000)));
+  document.getElementById('raceCountdown').textContent='🏁 '+days+' days to race';
+  load().then(()=>renderAll());
+}
+function logout(){if(!confirm('Log out?'))return;pin='';userName='';state={};loaded=false;document.getElementById('mainApp').style.display='none';document.getElementById('pinScreen').style.display='flex';}
+
+// ── QUIZ ──────────────────────────────────────────────────
+function startQuiz(){
+  document.getElementById('quizScreen').style.display='flex';
+  renderQuiz();
+}
+function renderQuiz(){
+  const body=document.getElementById('quizBody');
+  let H='';
+  QUIZ_QUESTIONS.forEach((section,si)=>{
+    H+=`<div class="quiz-section">
+      <div class="quiz-sec-title">${section.section}</div>`;
+    section.questions.forEach(q=>{
+      H+=`<div class="quiz-q">
+        <div class="quiz-q-text">${q.text}</div>
+        <div class="quiz-opts">`;
+      if(q.showIf&&quizAnswers[q.showIf.id]!==q.showIf.val){
+        H+=`<div style="font-size:11px;color:#bbb;font-style:italic">Answer the injury question above to unlock this</div>`;
+      } else if(q.type==='yn'){
+        H+=`<button class="quiz-opt-yn ${quizAnswers[q.id]==='yes'?'sel-y':''}" onclick="setAnswer('${q.id}','yes',this,'yn')">✓ Yes</button>
+            <button class="quiz-opt-yn ${quizAnswers[q.id]==='no'?'sel-n':''}" onclick="setAnswer('${q.id}','no',this,'yn')">✗ No</button>`;
+      } else if(q.type==='multi'){
+        const selected=quizAnswers[q.id]||[];
+        q.opts.forEach(opt=>{
+          const isSel=Array.isArray(selected)&&selected.includes(opt);
+          H+=`<button class="quiz-opt ${isSel?'sel':''}" onclick="toggleMulti('${q.id}','${opt}',this)">${opt}</button>`;
+        });
+      } else if(q.type==='text_optional'){
+        H+=`<input type="text" style="width:100%;padding:8px 10px;border-radius:7px;border:1.5px solid var(--border);background:var(--cream);font-size:13px;outline:none" placeholder="Optional — describe your injury (e.g. torn meniscus, rotator cuff surgery)..." value="${quizAnswers[q.id]||''}" oninput="quizAnswers['${q.id}']=this.value">`;
+      } else {
+        q.opts.forEach((opt,oi)=>{
+          H+=`<button class="quiz-opt ${quizAnswers[q.id]===opt?'sel':''}" onclick="setAnswer('${q.id}','${opt}',this,'mc')">${opt}</button>`;
+        });
+      }
+      H+=`</div></div>`;
+    });
+    H+=`</div>`;
+  });
+  H+=`<button class="quiz-submit" onclick="submitQuiz()">Calculate My Fitness Tier →</button>`;
+  body.innerHTML=H;
+}
+function toggleMulti(id,val,el){
+  if(!quizAnswers[id])quizAnswers[id]=[];
+  const idx=quizAnswers[id].indexOf(val);
+  if(idx>=0)quizAnswers[id].splice(idx,1);
+  else quizAnswers[id].push(val);
+  el.classList.toggle('sel',quizAnswers[id].includes(val));
+  const total=QUIZ_QUESTIONS.reduce((a,s)=>a+s.questions.length,0);
+  const done=Object.keys(quizAnswers).length;
+  document.getElementById('quizProgress').style.width=Math.round((done/total)*100)+'%';
+}
+function setAnswer(id,val,el,type){
+  quizAnswers[id]=val;
+  // Update UI
+  const parent=el.parentElement;
+  if(type==='yn'){
+    parent.querySelectorAll('.quiz-opt-yn').forEach(b=>{b.classList.remove('sel-y','sel-n');});
+    el.classList.add(val==='yes'?'sel-y':'sel-n');
+  } else {
+    parent.querySelectorAll('.quiz-opt').forEach(b=>b.classList.remove('sel'));
+    el.classList.add('sel');
+  }
+  // Update progress
+  const total=QUIZ_QUESTIONS.reduce((a,s)=>a+s.questions.length,0);
+  const done=Object.keys(quizAnswers).length;
+  document.getElementById('quizProgress').style.width=Math.round((done/total)*100)+'%';
+}
+function submitQuiz(){
+  // Calculate tier from answers
+  let score=0;
+  const yes=(id)=>quizAnswers[id]==='yes';
+  // Movement (7 questions)
+  if(yes('q_squat'))score+=2;
+  if(yes('q_pushup'))score+=2;
+  if(yes('q_burpee'))score+=3;
+  if(yes('q_pullup'))score+=3;
+  if(yes('q_lunge'))score+=1;
+  if(yes('q_toes'))score+=1;
+  if(yes('q_overhead'))score+=1;
+  // Balance (5 questions)
+  if(yes('q_1leg_open'))score+=1;
+  if(yes('q_1leg_closed'))score+=2;
+  if(yes('q_heel_toe'))score+=1;
+  if(yes('q_head_turn'))score+=2;
+  if(yes('q_rdl'))score+=3;
+  // Cardio
+  if(yes('q_walk20'))score+=1;
+  if(yes('q_jog5'))score+=2;
+  if(yes('q_run1'))score+=2;
+
+  // Assign tier
+  if(score<=5)userTier=1;
+  else if(score<=10)userTier=2;
+  else if(score<=16)userTier=3;
+  else if(score<=22)userTier=4;
+  else userTier=5;
+
+  const tier=TIERS[userTier];
+  const body=document.getElementById('quizBody');
+  body.innerHTML=`
+    <div class="tier-result">
+      <div class="tier-badge">${tier.emoji}</div>
+      <div class="tier-name">Tier ${userTier} — ${tier.name}</div>
+      <div class="tier-desc">${tier.desc}</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.6);margin-bottom:14px">Score: ${score}/27 · You can retake this anytime to level up</div>
+    </div>
+    <div class="card" style="margin-bottom:12px">
+      <div style="font-size:12px;color:#555;line-height:1.7">
+        ${userTier===1?'Your workouts focus on building the movement habit with basic bodyweight exercises and balance work. Every session is achievable. We start here together.':
+          userTier===2?'You can move — now we add structure. Your workouts build strength and coordination with gym machines and bodyweight circuits, plus walk/jog intervals for the Spartan 5K run.':
+          userTier===3?'Solid base. Your workouts add intensity, obstacle-specific training, and running intervals. The Spartan Sprint is absolutely within reach.':
+          userTier===4?'You\'re ready to push. Spartan-specific circuits, heavier carries, rope work, and race-pace run training. This will challenge you.':
+          'Full Spartan athlete program. Weighted movements, full circuits, race simulations. You\'re going to crush the Sprint.'}
+      </div>
+    </div>
+    <button class="quiz-submit" onclick="finalizeAccount()">Start Training →</button>`;
+}
+function finalizeAccount(){
+  const injuryParts=quizAnswers.q_injury==='yes'?(quizAnswers.q_injury_parts||[]):[];
+  const profile={name:userName,pin,tier:userTier,quizAnswers,injuries:injuryParts,lastSeen:new Date().toISOString()};
+  try{localStorage.setItem('ohs_user_'+pin,JSON.stringify(profile));}catch(e){}
+  // Save injuries to state for workout modification
+  sv('profile.injuries',JSON.stringify(injuryParts));
+  sv('profile.tier',userTier);
+  launchApp();
+}
+
+// ── RENDER ────────────────────────────────────────────────
+async function changeWeek(dir){wOff+=dir;loaded=false;document.getElementById('dailyContent').innerHTML='<div class="spin-wrap"><div class="spinner"></div></div>';await load();renderAll();}
+function switchDay(d){curDay=d;renderAll();}
+function setPage(id,el){curPage=id;document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.ntab').forEach(t=>t.classList.remove('active'));const pg=document.getElementById('page-'+id);if(pg)pg.classList.add('active');if(el)el.classList.add('active');renderContent();}
+function renderAll(){renderHdr();renderContent();}
+function renderContent(){
+  if(curPage==='daily')renderDaily();
+  else if(curPage==='fitness')renderFitness();
+  else if(curPage==='spartan')renderSpartan();
+  else if(curPage==='leaderboard')renderLeaderboard();
+  else if(curPage==='settings')renderSettings();
+}
+function renderHdr(){
+  document.getElementById('weekRange').textContent=fmtR(wOff);
+  const wrap=document.getElementById('dayTabsWrap');wrap.innerHTML='';
+  const today=new Date().getDay(),isCurr=wOff===0;
+  for(let d=0;d<7;d++){
+    const b=document.createElement('button');
+    b.className='ntab'+(d===curDay?' active':'');
+    b.style.cssText='padding:3px 7px;font-size:10px'+(isCurr&&d===today?';box-shadow:0 0 0 2px #e8b830':'');
+    b.textContent=SHORT[d];b.onclick=()=>switchDay(d);wrap.appendChild(b);
+  }
+}
+function hr(dk,key,label,time){
+  const done=g(`${dk}.habits.${key}`,false);
+  return `<div class="hr" onclick="tog('${dk}.habits.${key}');renderAll()"><div class="hc ${done?'on':''}">✓</div><div class="hl ${done?'done':''}">${label}</div><div class="htag">${time}</div></div>`;
+}
+
+// ── DAILY PAGE ────────────────────────────────────────────
+// INJURY MODIFICATION HELPERS
+const INJURY_MODS={
+  'Knee':{
+    flag:['squat','lunge','split squat','box jump','step up','pistol','Bulgarian'],
+    note:'⚠️ Knee — reduce depth, pain-free range only. Stop if sharp pain.',
+    swap:{'Box jump':'Step up (controlled)','Bulgarian split squat':'Supported split squat reduced depth','Pistol squat':'Sit-to-stand from box'}
+  },
+  'Hip':{
+    flag:['RDL','deadlift','hip hinge','lunge','split squat','squat'],
+    note:'⚠️ Hip — limit range of motion, avoid impingement positions.',
+    swap:{}
+  },
+  'Shoulder':{
+    flag:['overhead press','pull-up','pushup','dip','row','bench','raise','hang'],
+    note:'⚠️ Shoulder — pain-free range only. Reduce weight. No overhead if painful.',
+    swap:{'Pull-ups':'Band-assisted pull-ups or lat pulldown','Overhead press':'Cable lateral raise (pain-free only)'}
+  },
+  'Lower back':{
+    flag:['deadlift','RDL','squat','carry','sandbag','row'],
+    note:'⚠️ Lower back — brace core, neutral spine. Reduce load. Stop if pain radiates.',
+    swap:{}
+  },
+  'Ankle':{
+    flag:['calf raise','jump','lunge','squat','carry','run'],
+    note:'⚠️ Ankle — reduce impact. Seated alternatives where possible.',
+    swap:{'Box jump':'Seated leg press','Run/jog':'Bike or row machine'}
+  },
+  'Wrist / Elbow':{
+    flag:['pushup','bench','curl','press','carry','hang','row'],
+    note:'⚠️ Wrist/Elbow — neutral grip, reduce range. Stop if sharp pain.',
+    swap:{'Pushup':'Incline pushup or chest press machine','Farmer carry':'Trap bar carry'}
+  },
+  'Neck':{
+    flag:['overhead','shrug','deadlift','row'],
+    note:'⚠️ Neck — avoid end-range positions. Keep chin neutral.',
+    swap:{}
+  }
+};
+
+function getInjuryNote(exName,injuries){
+  if(!injuries||!injuries.length)return '';
+  const name=exName.toLowerCase();
+  for(const inj of injuries){
+    const mod=INJURY_MODS[inj];
+    if(!mod)continue;
+    for(const flag of mod.flag){
+      if(name.includes(flag.toLowerCase()))return mod.note;
+    }
+  }
+  return '';
+}
+
+function getUserInjuries(){
+  try{
+    const p=localStorage.getItem('ohs_user_'+pin);
+    if(p)return JSON.parse(p).injuries||[];
+  }catch(e){}
+  return [];
+}
+
+function renderDaily(){
+  const mc=document.getElementById('dailyContent');
+  if(!loaded){mc.innerHTML='<div class="spin-wrap"><div class="spinner"></div></div>';return;}
+  const d=curDay,dk=`d${d}`;
+  const tier=TIERS[userTier];
+  const isWorkoutDay=[1,3,5].includes(d);
+  const isCardioDay=d===6;
+  const isRestDay=[0,2,4].includes(d);
+  const workout=isWorkoutDay||isCardioDay?WORKOUTS[userTier]?.[d]:null;
+  const sessComplete=g(`${dk}.training.done`,false);
+  const habitsKeys=['water','nutrition','supp_digest','supp_muscle','supp_pak'];
+  const habitsDone=habitsKeys.filter(h=>g(`${dk}.habits.${h}`,false)).length;
+  const trainingWeek=getTrainingWeek();
+
+  let H=`<div class="dh">
+    <div>
+      <div class="dn" style="color:var(--g)">${DAYS[d]}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px">${isWorkoutDay?workout?.name||'Training Day':isCardioDay?workout?.name||'Cardio Day':'Rest + Recovery'} · Week ${trainingWeek}</div>
+    </div>
+    <div style="text-align:right"><div style="font-size:10px;color:var(--muted)">Tier</div><div style="font-size:15px;font-weight:800;color:var(--g)">${tier.emoji} ${tier.name}</div></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="snum">${habitsDone}/${habitsKeys.length}</div><div class="slbl">Habits</div></div>
+    <div class="stat"><div class="snum" style="color:${sessComplete?'var(--g)':'#bbb'}">${sessComplete?'✓':'—'}</div><div class="slbl">Session</div></div>
+    <div class="stat"><div class="snum">${Math.max(0,Math.ceil((RACE_DATE-new Date())/(24*60*60*1000)))}</div><div class="slbl">Days out</div></div>
+  </div>`;
+
+  // WORKOUT
+  if(workout){
+    H+=`<div class="sec"><div class="sh"><div class="st"><div class="dot" style="background:var(--g)"></div>${isCardioDay?'Cardio':'Workout'} · ${workout.name}</div><span class="week-badge">Week ${trainingWeek}</span></div>`;
+    workout.phases.forEach((phase,pi)=>{
+      H+=`<div class="ex-card">
+        <div class="ex-phase">${phase.label}<span class="time-badge">${pi===0?'Warm-up':pi===workout.phases.length-1?'Finish':'Phase '+(pi+1)}</span></div>
+        <div class="ex-list">`;
+      const userInjuries=getUserInjuries();
+      phase.exs.forEach((ex,ei)=>{
+        const injNote=getInjuryNote(ex.n,userInjuries);
+        const exKey=`${dk}.ex.${pi}_${ei}`;
+        const exDone=g(`${exKey}.done`,false);
+        const hasWeight=ex.s&&(ex.s.includes('×')||ex.s.toLowerCase().includes('rep')||ex.s.toLowerCase().includes('set'));
+        H+=`<div class="ex-row" style="flex-direction:column;align-items:stretch">
+          <div style="display:flex;align-items:flex-start;gap:8px">
+            <div onclick="tog('${exKey}.done');renderAll()" style="cursor:pointer">
+              <div class="hc ${exDone?'on':''}" style="width:20px;height:20px;border-radius:4px;margin-top:2px">✓</div>
+            </div>
+            <div class="ex-letter" style="margin-top:2px">${ex.l}</div>
+            <div class="ex-name" style="flex:1">
+              <div class="ex-name-txt ${exDone?'done':''}">${ex.n}</div>
+              <div class="ex-sets">${ex.s}</div>
+              ${ex.note?`<div class="ex-note">💡 ${ex.note}</div>`:''}
+              ${injNote?`<div style="font-size:10px;color:#c02828;margin-top:2px;font-weight:600">${injNote}</div>`:''}
+            </div>
+          </div>
+          ${hasWeight?`<div style="display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:4px;margin-top:6px;margin-left:28px;align-items:center">
+            <div style="font-size:10px;color:var(--muted);padding:3px 5px">Log</div>
+            <div style="font-size:10px;font-weight:600;color:var(--muted);text-align:center">Weight</div>
+            <div style="font-size:10px;font-weight:600;color:var(--muted);text-align:center">Reps</div>
+            <div style="font-size:10px;font-weight:600;color:var(--muted);text-align:center">Notes</div>
+          </div>
+          ${[1,2,3].map(sn=>`<div style="display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:4px;margin-top:2px;margin-left:28px;align-items:center">
+            <div style="font-size:10px;color:var(--muted);padding:3px 5px">Set ${sn}</div>
+            <input type="text" value="${g(`${exKey}.s${sn}.w`,'')}" oninput="sv('${exKey}.s${sn}.w',this.value)" placeholder="lbs" style="text-align:center;padding:4px;font-size:11px">
+            <input type="text" value="${g(`${exKey}.s${sn}.r`,'')}" oninput="sv('${exKey}.s${sn}.r',this.value)" placeholder="reps" style="text-align:center;padding:4px;font-size:11px">
+            <input type="text" value="${g(`${exKey}.s${sn}.n`,'')}" oninput="sv('${exKey}.s${sn}.n',this.value)" placeholder="..." style="padding:4px;font-size:11px">
+          </div>`).join('')}`:''}
+        </div>`;
+      });
+      H+=`</div></div>`;
+    });
+    H+=`<div class="card">
+      <div style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:8px" onclick="tog('${dk}.training.done');renderAll()">
+        <div class="hc ${sessComplete?'on':''}" style="width:20px;height:20px;border-radius:4px">✓</div>
+        <div style="font-size:13px;font-weight:600">Session complete</div>
+      </div>
+      <label class="lbl">How did it feel?</label>
+      <textarea style="min-height:52px" placeholder="Energy, what was hard, what felt good, any balance challenges..." oninput="sv('${dk}.training.notes',this.value)">${esc(g(`${dk}.training.notes`,''))}</textarea>
+    </div></div>`;
+  } else if(isRestDay){
+    H+=`<div class="card card-green" style="margin-bottom:10px">
+      <div style="font-size:13px;font-weight:700;color:var(--g);margin-bottom:5px">Rest + Recovery Day</div>
+      <div style="font-size:12px;color:#555;line-height:1.6">Your body gets stronger on rest days. Focus on nutrition, sleep, hydration, and your supplements today. A short walk is always welcome.</div>
+    </div>`;
+  }
+
+  // SUPPLEMENTS
+  H+=`<div class="sec"><div class="sh"><div class="st"><div class="dot" style="background:var(--gold)"></div>OHS Supplements</div></div>
+  <div class="card">`;
+  SUPPS.forEach((s,i)=>{
+    const key=i===0?'supp_digest':i===1?'supp_muscle':'supp_pak';
+    const done=g(`${dk}.habits.${key}`,false);
+    H+=`<div class="supp-row" onclick="tog('${dk}.habits.${key}');renderAll()" style="cursor:pointer">
+      <div class="supp-icon">${s.icon}</div>
+      <div style="flex:1"><div class="supp-name ${done?'done':''}">${s.name}</div><div class="supp-time">${s.time}</div></div>
+      <div class="hc ${done?'on':''}" style="flex-shrink:0">✓</div>
+    </div>`;
+  });
+  H+=`</div></div>`;
+
+  // DAILY HABITS
+  H+=`<div class="sec"><div class="sh"><div class="st"><div class="dot" style="background:var(--gm)"></div>Daily habits</div></div>
+  <div class="card">
+    ${hr(dk,'water','Drink 64oz+ of water today','All day')}
+    ${hr(dk,'nutrition','Ate whole foods — protein with each meal','Today')}
+    ${hr(dk,'steps','10,000 steps or 30 min of movement','Today')}
+    ${hr(dk,'sleep','Got 7+ hours of sleep last night','Morning')}
+  </div></div>`;
+
+  // NOTES
+  H+=`<div class="sec"><div class="sh"><div class="st"><div class="dot" style="background:var(--muted)"></div>Notes</div></div>
+  <div class="card"><textarea style="min-height:52px" placeholder="How are you feeling? Energy? Sore? Motivated?" oninput="sv('${dk}.notes',this.value)">${esc(g(`${dk}.notes`,''))}</textarea></div></div>`;
+
+  mc.innerHTML=H;
+}
+
+// ── FITNESS SCORE PAGE ────────────────────────────────────
+function renderFitness(){
+  const mc=document.getElementById('fitnessContent');
+  const week=getTrainingWeek();
+  const wk_key=`fitness_wk${week}`;
+
+  let totalScore=FITNESS_PILLARS.reduce((a,p)=>a+(parseInt(g(`${wk_key}.${p.key}`,0))||0),0);
+  const maxScore=FITNESS_PILLARS.length*9;
+  const pct=Math.round((totalScore/maxScore)*100);
+
+  let H=`<div class="dh"><div class="dn" style="color:var(--g)">F.I.T.N.E.S.S</div><div class="dm"><div style="font-size:10px;color:var(--muted)">Week ${week} score</div><div style="font-size:22px;font-weight:800;color:var(--g)">${totalScore}/${maxScore}</div></div></div>
+  <div class="card card-gold" style="margin-bottom:12px">
+    <div style="font-size:11px;font-weight:700;color:var(--goldd);margin-bottom:5px">Your F.I.T.N.E.S.S. Score · Week ${week}</div>
+    <div style="font-size:28px;font-weight:900;color:var(--g);margin-bottom:4px">${pct}%</div>
+    <div class="pbar" style="height:8px"><div class="pbf pbf-gold" style="width:${pct}%"></div></div>
+    <div style="font-size:11px;color:var(--muted);margin-top:5px">${pct>=85?'Outstanding week! 🌟':pct>=70?'Strong week — keep pushing! 💪':pct>=55?'Good effort — identify one pillar to improve next week':pct>=40?'Room to grow — pick your hardest pillar and focus there':'Every journey starts here. Show up tomorrow.'}</div>
+  </div>`;
+
+  FITNESS_PILLARS.forEach(p=>{
+    const score=parseInt(g(`${wk_key}.${p.key}`,0))||0;
+    H+=`<div class="fitness-letter">
+      <div class="fl-header">
+        <div><div class="fl-letter">${p.letter}</div><div class="fl-word">${p.full}</div></div>
+        <div style="font-size:24px;font-weight:900;color:${score>=7?'#e8b830':score>=4?'rgba(255,255,255,.8)':'rgba(255,255,255,.4)'}">${score}/9</div>
+      </div>
+      <div class="fl-desc">${p.desc}</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.6);margin-bottom:6px">${p.q}</div>
+      <div class="fl-score-row">
+        ${[1,2,3,4,5,6,7,8,9].map(n=>`<div class="fl-score-btn ${score===n?'sel':''}" onclick="sv('${wk_key}.${p.key}',${n});renderAll()">${n}</div>`).join('')}
+      </div>
+    </div>`;
+  });
+
+  // Weekly reflection
+  H+=`<div class="divider"></div>
+  <div class="sec"><div class="sh"><div class="st"><div class="dot" style="background:var(--g)"></div>Weekly reflection</div></div>
+  <div class="card">
+    <div style="margin-bottom:8px"><label class="lbl">One win from this week</label>
+      <input type="text" value="${esc(g(`${wk_key}.win`,''))}" oninput="sv('${wk_key}.win',this.value)" placeholder="Something you're proud of...">
+    </div>
+    <div style="margin-bottom:8px"><label class="lbl">One thing to improve next week</label>
+      <input type="text" value="${esc(g(`${wk_key}.improve`,''))}" oninput="sv('${wk_key}.improve',this.value)" placeholder="One specific thing...">
+    </div>
+    <label class="lbl">How do you feel overall this week?</label>
+    <textarea style="min-height:52px" oninput="sv('${wk_key}.reflection',this.value)" placeholder="Your honest reflection...">${esc(g(`${wk_key}.reflection`,''))}</textarea>
+  </div></div>`;
+
+  // Retake quiz option
+  H+=`<div class="card" style="text-align:center;padding:14px">
+    <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Improved since your assessment? Update your tier.</div>
+    <button onclick="retakeTier()" style="padding:8px 20px;border-radius:7px;border:2px solid var(--g);background:white;color:var(--g);font-size:12px;font-weight:700;cursor:pointer">Retake fitness assessment</button>
+  </div>`;
+
+  mc.innerHTML=H;
+}
+
+function retakeTier(){
+  quizAnswers={};
+  document.getElementById('mainApp').style.display='none';
+  startQuiz();
+}
+
+// ── SPARTAN PAGE ──────────────────────────────────────────
+function renderSpartan(){
+  const mc=document.getElementById('spartanContent');
+  const days=Math.max(0,Math.ceil((RACE_DATE-new Date())/(24*60*60*1000)));
+  const weeks=Math.ceil(days/7);
+  const dk=`d${curDay}`;
+
+  let H=`<div class="dh"><div class="dn" style="color:#c02828">Spartan Sprint</div><div class="dm"><div style="font-size:10px;color:var(--muted)">Race day</div><div style="font-size:14px;font-weight:800;color:#c02828">Nov 21</div></div></div>
+  <div class="stats">
+    <div class="stat"><div class="snum" style="color:#c02828">${days}</div><div class="slbl">Days out</div></div>
+    <div class="stat"><div class="snum">${weeks}</div><div class="slbl">Weeks</div></div>
+    <div class="stat"><div class="snum">5K</div><div class="slbl">Sprint</div></div>
+  </div>
+  <div class="card" style="background:#fff5f5;border-color:#fca5a5;margin-bottom:10px">
+    <div style="font-size:11px;font-weight:700;color:#c02828;margin-bottom:6px">🔥 Spartan Sprint · 5K · 20+ obstacles · 30 burpee penalty</div>
+    <div class="pbar" style="height:6px;background:#fee2e2;margin-bottom:5px"><div style="height:100%;border-radius:3px;background:#c02828;width:${Math.min(100,Math.round(((new Date()-TRAIN_START)/(RACE_DATE-TRAIN_START))*100))}%"></div></div>
+    <div style="font-size:10px;color:#999">Train start Apr 16 → Race Nov 21</div>
+  </div>`;
+
+  // Key obstacles
+  H+=`<div class="sec"><div class="sh"><div class="st"><div class="dot" style="background:#c02828"></div>Key obstacles to train for</div></div>
+  <div class="card">
+    ${[
+      {n:'Rope climb / Multi-rig',s:'Train dead hangs weekly. Grip endurance is everything.',train:'Dead hang max time'},
+      {n:'Bucket carry',s:'20lb+ bucket uphill. Train farmer carries.',train:'Farmer carry 40+ steps'},
+      {n:'Spear throw',s:'30 burpees if missed. Practice your throw.',train:'Overhead press + accuracy'},
+      {n:'Wall over',s:'4–8ft walls. Train box jumps + pull-ups.',train:'Pull-ups + box jumps'},
+      {n:'Atlas stone carry',s:'Pick up heavy object, carry it. Train sandbag.',train:'Sandbag or DB hug carry'},
+      {n:'Burpee penalty',s:'30 burpees per failed obstacle. Build now.',train:'Burpees to 30 unbroken'}
+    ].map(o=>`<div style="display:flex;align-items:flex-start;gap:9px;padding:8px 0;border-bottom:1px solid #f5f4f0">
+      <div style="width:8px;height:8px;border-radius:50%;background:#c02828;flex-shrink:0;margin-top:4px"></div>
+      <div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--text)">${o.n}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:1px">${o.s}</div>
+        <div style="font-size:10px;color:var(--g);margin-top:2px;font-style:italic">Train: ${o.train}</div>
+      </div>
+    </div>`).join('')}
+  </div></div>`;
+
+  // Log today's Spartan prep
+  H+=`<div class="sec"><div class="sh"><div class="st"><div class="dot" style="background:#c02828"></div>Log today's Spartan prep</div></div>
+  <div class="card">
+    <div style="margin-bottom:8px"><label class="lbl">Burpees completed</label>
+      <input type="text" inputmode="decimal" value="${g(`${dk}.spartan.burpees`,'')}" oninput="sv('${dk}.spartan.burpees',this.value)" placeholder="e.g. 15">
+    </div>
+    <div style="margin-bottom:8px"><label class="lbl">Dead hang time (seconds)</label>
+      <input type="text" inputmode="decimal" value="${g(`${dk}.spartan.hang`,'')}" oninput="sv('${dk}.spartan.hang',this.value)" placeholder="e.g. 20">
+    </div>
+    <div style="margin-bottom:8px"><label class="lbl">Carry (steps completed)</label>
+      <input type="text" inputmode="decimal" value="${g(`${dk}.spartan.carry`,'')}" oninput="sv('${dk}.spartan.carry',this.value)" placeholder="e.g. 40">
+    </div>
+    <label class="lbl">Notes</label>
+    <textarea style="min-height:52px" placeholder="What obstacle felt hardest? What improved?" oninput="sv('${dk}.spartan.notes',this.value)">${esc(g(`${dk}.spartan.notes`,''))}</textarea>
+  </div></div>`;
+
+  // Race day tips
+  H+=`<div class="sec"><div class="sh"><div class="st"><div class="dot" style="background:#c02828"></div>Race day tips</div></div>
+  <div class="card">
+    ${[
+      'Eat real food 2 hours before — oatmeal, banana, peanut butter',
+      'Wear grip gloves for the multi-rig and rope climb',
+      'Don\'t skip the burpee penalty — do them and move on',
+      'Walk the hills — run the flats',
+      'Stick with your team — finish together',
+      'Bring a change of clothes and dry shoes for after'
+    ].map(t=>`<div style="display:flex;gap:8px;padding:6px 0;border-bottom:1px solid #f5f4f0;font-size:12px;color:var(--muted)"><span style="color:var(--g);font-weight:700">→</span>${t}</div>`).join('')}
+  </div></div>`;
+
+  mc.innerHTML=H;
+}
+
+// ── LEADERBOARD PAGE ──────────────────────────────────────
+async function renderLeaderboard(){
+  const mc=document.getElementById('lbContent');
+  mc.innerHTML='<div class="spin-wrap"><div class="spinner"></div></div>';
+
+  // Load all users
+  let users=[];
+  if(SHEET){
+    try{const r=await jsonp(SHEET+'?action=get&key=ohs_users');if(r&&r.status==='found'&&r.value)users=JSON.parse(r.value);}catch(e){}
+  }
+  if(!users.length){try{const l=localStorage.getItem('ohs_users');if(l)users=JSON.parse(l);}catch(e){}}
+
+  // Load current week data for each user
+  const now=new Date(),wd=now.getDay(),ws=new Date(now);ws.setDate(now.getDate()-wd);
+  const currentWkStart=ws.toISOString().split('T')[0];
+
+  let memberData=[];
+  for(const u of users){
+    const wkKey='ohs_week_'+u.pin+'_'+currentWkStart;
+    let data={};
+    try{const l=localStorage.getItem(wkKey);if(l)data=JSON.parse(l);}catch(e){}
+    if(SHEET){try{const r=await jsonp(SHEET+'?action=get&key='+encodeURIComponent(wkKey));if(r&&r.status==='found'&&r.value)data=JSON.parse(r.value);}catch(e){}}
+
+    let sessions=0,burpees=0,hang=0,fitnessScore=0;
+    for(let d=0;d<=6;d++){
+      if(data[`d${d}`]&&data[`d${d}`].training&&data[`d${d}`].training.done)sessions++;
+      const sp=data[`d${d}`]&&data[`d${d}`].spartan;
+      if(sp){burpees+=(parseInt(sp.burpees)||0);hang=Math.max(hang,parseInt(sp.hang)||0);}
+    }
+    const trainingWeek=getTrainingWeek();
+    const wkFitKey=`fitness_wk${trainingWeek}`;
+    if(data[wkFitKey]){
+      fitnessScore=['F','I','T','N','E','S','S2'].reduce((a,l)=>a+(parseInt(data[wkFitKey][l==='S2'?'S':l])||0),0);
+    }
+    memberData.push({...u,sessions,burpees,hang,fitnessScore,isMe:u.pin===pin});
+  }
+
+  // Sort by F.I.T.N.E.S.S. score
+  const sorted=[...memberData].sort((a,b)=>b.fitnessScore-a.fitnessScore||b.sessions-a.sessions);
+
+  let H=`<div class="dh"><div class="dn" style="color:var(--g)">OHS Squad</div><div class="dm"><div style="font-size:10px;color:var(--muted)">This week</div><div style="font-size:14px;font-weight:700;color:var(--g)">${sorted.length} members</div></div></div>`;
+
+  // MAIN LEADERBOARD
+  H+=`<div class="sec"><div class="sh"><div class="st"><div class="dot" style="background:var(--gold)"></div>F.I.T.N.E.S.S. leaderboard</div></div>
+  <div class="card">
+    ${sorted.map((m,i)=>`<div class="lb-row">
+      <div class="lb-rank">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div>
+      <div style="flex:1"><div class="lb-name">${esc(m.name)}${m.isMe?' 👋':''}</div>
+        <div class="lb-tier">${TIERS[m.tier||3].emoji} ${TIERS[m.tier||3].name}</div>
+      </div>
+      <div style="text-align:right"><div class="lb-val">${m.fitnessScore}/63</div><div style="font-size:10px;color:var(--muted)">${m.sessions} sessions</div></div>
+    </div>`).join('')}
+  </div></div>`;
+
+  // SECONDARY LEADERBOARDS
+  const lbs=[
+    {title:'Most sessions',key:'sessions',unit:'sessions',color:'var(--g)'},
+    {title:'Most burpees',key:'burpees',unit:'burpees',color:'#c02828'},
+    {title:'Longest dead hang',key:'hang',unit:'sec',color:'var(--gd)'}
+  ];
+  lbs.forEach(lb=>{
+    const s=[...memberData].sort((a,b)=>b[lb.key]-a[lb.key]).slice(0,5);
+    H+=`<div class="sec"><div class="sh"><div class="st"><div class="dot" style="background:${lb.color}"></div>${lb.title} this week</div></div>
+    <div class="card">
+      ${s.map((m,i)=>`<div class="lb-row">
+        <div class="lb-rank">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div>
+        <div class="lb-name">${esc(m.name)}${m.isMe?' 👋':''}</div>
+        <div class="lb-val" style="color:${lb.color}">${m[lb.key]} <span style="font-size:10px;color:var(--muted)">${lb.unit}</span></div>
+      </div>`).join('')}
+    </div></div>`;
+  });
+
+  mc.innerHTML=H;
+}
+
+// ── SETTINGS PAGE ─────────────────────────────────────────
+function renderSettings(){
+  const mc=document.getElementById('settingsContent');
+  const tier=TIERS[userTier];
+  let profile={};
+  try{const p=localStorage.getItem('ohs_user_'+pin);if(p)profile=JSON.parse(p);}catch(e){}
+  const injuries=profile.injuries||[];
+  const allBodyParts=['Knee','Hip','Shoulder','Lower back','Ankle','Wrist / Elbow','Neck','General — doctor restrictions'];
+
+  let H=`<div class="dh"><div class="dn" style="color:var(--g)">My Profile</div><div class="dm"><div style="font-size:10px;color:var(--muted)">Settings</div></div></div>`;
+
+  // CURRENT TIER
+  H+=`<div class="card card-green" style="margin-bottom:10px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="font-size:36px">${tier.emoji}</div>
+      <div>
+        <div style="font-size:16px;font-weight:800;color:var(--g)">Tier ${userTier} — ${tier.name}</div>
+        <div style="font-size:11px;color:#555;line-height:1.5;margin-top:2px">${tier.desc}</div>
+      </div>
+    </div>
+  </div>`;
+
+  // NAME + START DATE
+  const startDate=profile.startDate||new Date().toISOString().split('T')[0];
+  H+=`<div class="sec"><div class="sh"><div class="st"><div class="dot" style="background:var(--g)"></div>Your profile</div></div>
+  <div class="card">
+    <div style="margin-bottom:10px">
+      <label class="lbl">Your name</label>
+      <input type="text" id="settingsName" value="${esc(userName)}" placeholder="Your first name" style="margin-bottom:6px">
+    </div>
+    <div style="margin-bottom:10px">
+      <label class="lbl">Training start date <span style="font-size:10px;color:var(--muted);font-weight:400;text-transform:none">(Week 1 begins from this date)</span></label>
+      <input type="date" id="settingsStartDate" value="${startDate}" style="margin-bottom:6px;padding:8px 10px;border-radius:6px;border:1px solid var(--border);background:var(--cream);font-size:13px;width:100%;outline:none">
+    </div>
+    <button onclick="saveName()" style="padding:8px 16px;border-radius:7px;border:none;background:var(--g);color:white;font-size:12px;font-weight:700;cursor:pointer">Save profile</button>
+    <div id="nameMsg" style="font-size:11px;color:var(--g);margin-top:5px;display:none">Profile updated ✓</div>
+  </div></div>`;
+
+  // INJURIES
+  H+=`<div class="sec"><div class="sh"><div class="st"><div class="dot" style="background:#c02828"></div>Injuries + limitations</div></div>
+  <div class="card">
+    <div style="font-size:12px;color:#555;line-height:1.6;margin-bottom:10px">Select any areas where you have pain or injury. Your workouts will automatically show modification notes for those areas.</div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">
+      ${allBodyParts.map(part=>`
+        <button id="inj_${part.replace(/[^a-zA-Z]/g,'_')}" 
+          onclick="toggleInjury('${part}')" 
+          style="padding:6px 14px;border-radius:20px;border:1.5px solid ${injuries.includes(part)?'#c02828':'var(--border)'};background:${injuries.includes(part)?'#fff0f0':'white'};color:${injuries.includes(part)?'#c02828':'var(--muted)'};font-size:12px;font-weight:${injuries.includes(part)?'700':'400'};cursor:pointer">
+          ${injuries.includes(part)?'✓ ':''} ${part}
+        </button>`).join('')}
+    </div>
+    ${injuries.length>0?`<div style="font-size:11px;color:#c02828;padding:8px 10px;background:#fff0f0;border-radius:7px;border:1px solid #fca5a5">
+      ⚠️ Active: ${injuries.join(', ')} — your workouts show modification notes for these areas
+    </div>`:'<div style="font-size:11px;color:#999">No injuries selected — all exercises shown as normal</div>'}
+    <div style="margin-top:10px">
+      <label class="lbl">Other — describe any other injury or limitation</label>
+      <input type="text" id="injOther" value="${esc(profile.injuryOther||'')}" placeholder="e.g. torn meniscus, rotator cuff surgery, herniated disc..." oninput="saveInjuryOther(this.value)" style="margin-top:4px">
+    </div>
+    <div id="injMsg" style="font-size:11px;color:var(--g);margin-top:8px;display:none">Injuries updated ✓</div>
+  </div></div>`;
+
+  // TIER UPDATE
+  H+=`<div class="sec"><div class="sh"><div class="st"><div class="dot" style="background:var(--gold)"></div>Update fitness tier</div></div>
+  <div class="card">
+    <div style="font-size:12px;color:#555;line-height:1.6;margin-bottom:10px">Improved since you started? Manually set your tier or retake the full assessment.</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+      ${Object.entries(TIERS).map(([t,tier])=>`
+        <button onclick="setTierManual(${t})" 
+          style="flex:1;min-width:80px;padding:8px 6px;border-radius:8px;border:2px solid ${userTier==t?'var(--g)':'var(--border)'};background:${userTier==t?'var(--gl)':'white'};cursor:pointer;text-align:center">
+          <div style="font-size:18px">${tier.emoji}</div>
+          <div style="font-size:10px;font-weight:700;color:${userTier==t?'var(--g)':'var(--muted)'}">${tier.name}</div>
+        </button>`).join('')}
+    </div>
+    <button onclick="retakeTier()" style="width:100%;padding:10px;border-radius:8px;border:2px solid var(--g);background:white;color:var(--g);font-size:13px;font-weight:700;cursor:pointer">
+      Retake full fitness assessment →
+    </button>
+    <div id="tierMsg" style="font-size:11px;color:var(--g);margin-top:8px;display:none">Tier updated ✓ Your workouts have been updated</div>
+  </div></div>`;
+
+  // QUIZ ANSWERS SUMMARY
+  const answeredCount=Object.keys(profile.quizAnswers||{}).length;
+  H+=`<div class="sec"><div class="sh"><div class="st"><div class="dot" style="background:var(--muted)"></div>Assessment summary</div></div>
+  <div class="card">
+    <div style="font-size:12px;color:#555;margin-bottom:8px">${answeredCount} questions answered in your last assessment</div>
+    ${[
+      {label:'Squat form',key:'q_squat'},
+      {label:'Pushup',key:'q_pushup'},
+      {label:'Burpee',key:'q_burpee'},
+      {label:'Pull-up / dead hang',key:'q_pullup'},
+      {label:'Single leg balance (eyes open)',key:'q_1leg_open'},
+      {label:'Single leg balance (eyes closed)',key:'q_1leg_closed'},
+      {label:'Single leg RDL',key:'q_rdl'},
+      {label:'Jog 5 min',key:'q_jog5'}
+    ].map(item=>{
+      const ans=(profile.quizAnswers||{})[item.key];
+      return `<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f5f4f0">
+        <div style="font-size:12px;color:#555">${item.label}</div>
+        <div style="font-size:11px;font-weight:700;color:${ans==='yes'?'var(--g)':ans==='no'?'#c02828':'#bbb'}">${ans==='yes'?'✓ Yes':ans==='no'?'✗ No':'—'}</div>
+      </div>`;
+    }).join('')}
+    <button onclick="retakeTier()" style="width:100%;padding:8px;border-radius:7px;border:1px solid var(--border);background:var(--cream);color:var(--muted);font-size:11px;cursor:pointer;margin-top:8px">Update these answers →</button>
+  </div></div>`;
+
+  // LOGOUT
+  H+=`<div class="card" style="text-align:center;margin-top:8px">
+    <button onclick="logout()" style="padding:10px 24px;border-radius:8px;border:1px solid var(--border);background:white;color:#c02828;font-size:12px;font-weight:700;cursor:pointer">Log out</button>
+  </div>`;
+
+  mc.innerHTML=H;
+}
+
+function saveName(){
+  const newName=document.getElementById('settingsName').value.trim();
+  const startDateEl=document.getElementById('settingsStartDate');
+  const newStart=startDateEl?startDateEl.value:'';
+  if(!newName)return;
+  userName=newName;
+  document.getElementById('userBdg').textContent=userName+' · logout';
+  let profile={};
+  try{const p=localStorage.getItem('ohs_user_'+pin);if(p)profile=JSON.parse(p);}catch(e){}
+  profile.name=newName;
+  if(newStart)profile.startDate=newStart;
+  try{localStorage.setItem('ohs_user_'+pin,JSON.stringify(profile));}catch(e){}
+  if(SHEET)jsonp(SHEET+'?action=set&key='+encodeURIComponent(userKey())+'&value='+encodeURIComponent(JSON.stringify(profile))).catch(()=>{});
+  const msg=document.getElementById('nameMsg');
+  msg.style.display='block';setTimeout(()=>msg.style.display='none',2000);
+}
+
+function saveInjuryOther(val){
+  let profile={};
+  try{const p=localStorage.getItem('ohs_user_'+pin);if(p)profile=JSON.parse(p);}catch(e){}
+  profile.injuryOther=val;
+  try{localStorage.setItem('ohs_user_'+pin,JSON.stringify(profile));}catch(e){}
+  if(SHEET)jsonp(SHEET+'?action=set&key='+encodeURIComponent(userKey())+'&value='+encodeURIComponent(JSON.stringify(profile))).catch(()=>{});
+}
+function toggleInjury(part){
+  let profile={};
+  try{const p=localStorage.getItem('ohs_user_'+pin);if(p)profile=JSON.parse(p);}catch(e){}
+  if(!profile.injuries)profile.injuries=[];
+  const idx=profile.injuries.indexOf(part);
+  if(idx>=0)profile.injuries.splice(idx,1);
+  else profile.injuries.push(part);
+  try{localStorage.setItem('ohs_user_'+pin,JSON.stringify(profile));}catch(e){}
+  if(SHEET)jsonp(SHEET+'?action=set&key='+encodeURIComponent(userKey())+'&value='+encodeURIComponent(JSON.stringify(profile))).catch(()=>{});
+  const msg=document.getElementById('injMsg');
+  if(msg){msg.style.display='block';setTimeout(()=>msg.style.display='none',2000);}
+  renderSettings();
+}
+
+function setTierManual(t){
+  userTier=parseInt(t);
+  const tier=TIERS[userTier];
+  document.getElementById('tierPill').textContent=tier.emoji+' '+tier.name;
+  document.getElementById('tierPill').style.background=tier.color;
+  // Update profile
+  let profile={};
+  try{const p=localStorage.getItem('ohs_user_'+pin);if(p)profile=JSON.parse(p);}catch(e){}
+  profile.tier=userTier;
+  try{localStorage.setItem('ohs_user_'+pin,JSON.stringify(profile));}catch(e){}
+  if(SHEET)jsonp(SHEET+'?action=set&key='+encodeURIComponent(userKey())+'&value='+encodeURIComponent(JSON.stringify(profile))).catch(()=>{});
+  saveUserProfile();
+  const msg=document.getElementById('tierMsg');
+  if(msg){msg.style.display='block';setTimeout(()=>msg.style.display='none',2000);}
+  renderSettings();
+}
+</script>
+</body>
+</html>
