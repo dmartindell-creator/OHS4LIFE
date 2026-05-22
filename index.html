@@ -172,6 +172,7 @@ input[type=number]::-webkit-inner-spin-button{display:none}
     <button class="gbtn" onclick="enterPin()">Let's Go</button>
     <div class="pin-div"><div class="pin-div-line"></div><div class="pin-div-txt">New? Create account</div><div class="pin-div-line"></div></div>
     <input class="nf" id="newName" type="text" placeholder="Your first name">
+    <input class="nf" id="newBirthday" type="date" placeholder="Birthday" style="color:#888">
     <input class="pf" id="newPin" type="number" placeholder="Pick a PIN" style="letter-spacing:5px">
     <button class="gbtn outline" onclick="createAccount()">Create account</button>
     <div id="pinErr" class="perr" style="display:none;margin-top:6px"></div>
@@ -272,120 +273,120 @@ const TIERS={
 const WORKOUTS={
   1:{ // SPARK
     1:{name:'Full Body Foundation',phases:[
-      {label:'Warm-up · 5 min',exs:[{l:'A',n:'March in place',s:'2 min',note:'Lift knees high, swing arms'},{l:'B',n:'Arm circles',s:'×10 each direction'},{l:'C',n:'Ankle rolls',s:'×10 each'}]},
-      {label:'Proprioception · Balance',exs:[{l:'A',n:'Single leg stand',s:'3×10s each leg — eyes open',note:'Touch wall if needed',how:'Stand near a wall for safety. Lift one foot slightly off floor. Focus on a fixed point ahead. Keep standing knee soft, not locked.',vid:'single leg balance exercise beginners'},{l:'B',n:'Heel-to-toe walk',s:'10 steps forward + back',note:'Like a sobriety test — eyes forward',how:'Place one foot directly in front of the other so heel touches toe with each step. Arms out for balance. Go slow.',vid:'heel to toe walking balance exercise'},{l:'C',n:'Weight shifts side to side',s:'2×10 — slow and controlled'}]},
+      {label:'Warm-up · 5 min',exs:[{l:'A',n:'March in place',s:'2 min',note:'Lift knees high, swing arms',how:'Lift knees to hip height alternating, swing arms. Keep core tight.',vid:'marching in place warm up exercise how to'},{l:'B',n:'Arm circles',s:'×10 each direction',how:'Extend arms to sides. Make small circles forward 10 times, then reverse. Gradually increase size.',vid:'arm circles warm up shoulder mobility'},{l:'C',n:'Ankle rolls',s:'×10 each',how:'Lift one foot, rotate ankle in full circles 10 times each direction. Loosens the ankle joint before activity.',vid:'ankle circles mobility warm up exercise'}]},
+      {label:'Proprioception · Balance',exs:[{l:'A',n:'Single leg stand',s:'3×10s each leg — eyes open',note:'Touch wall if needed',how:'Stand near a wall for safety. Lift one foot slightly off floor. Focus on a fixed point ahead. Keep standing knee soft, not locked.',vid:'single leg balance exercise beginners'},{l:'B',n:'Heel-to-toe walk',s:'10 steps forward + back',note:'Like a sobriety test — eyes forward',how:'Place one foot directly in front of the other so heel touches toe with each step. Arms out for balance. Go slow.',vid:'heel to toe walking balance exercise'},{l:'C',n:'Weight shifts side to side',s:'2×10 — slow and controlled',how:'Stand feet hip width. Slowly shift weight onto right foot, hold 2 seconds, shift to left. Builds ankle awareness.',vid:'weight shifting balance exercise beginners'}]},
       {label:'Strength · Bodyweight',exs:[{l:'A',n:'Sit-to-stand from chair',s:'3×10 — no hands',note:'This IS a squat',how:'Sit at edge of chair, feet shoulder width, lean forward slightly, push through heels to stand fully. Lower back down slowly.',vid:'sit to stand exercise how to beginners'},{l:'B',n:'Wall pushup',s:'3×10',how:'Stand an arm length from wall, hands at chest height. Lean in until nose nearly touches wall, push back. Keep body straight like a plank.',vid:'wall pushup how to beginners'},{l:'C',n:'Standing hip hinge',s:'3×10 — bend at hips, soft knees',how:'Stand with feet hip width. Push hips BACK (not down), keep back flat, slight knee bend. Feel the stretch in your hamstrings then return to standing.',vid:'hip hinge exercise how to beginners'}]},
-      {label:'Cool down',exs:[{l:'A',n:'Seated hamstring stretch',s:'30s each'},{l:'B',n:'Doorway chest stretch',s:'30s'}]}
+      {label:'Cool down',exs:[{l:'A',n:'Seated hamstring stretch',s:'30s each',how:'Sit on floor, legs straight out. Hinge forward at hips reaching toward toes. Keep back relatively flat. Hold the stretch — do not bounce.',vid:'seated hamstring stretch how to'},{l:'B',n:'Doorway chest stretch',s:'30s',how:'Stand in doorway, forearms on frame at 90 degrees. Step one foot forward and lean through the door gently. Feel the stretch across your chest.',vid:'doorway chest stretch pec stretch how to'}]}
     ]},
     3:{name:'Move & Balance',phases:[
-      {label:'Warm-up · 5 min',exs:[{l:'A',n:'Walk in place',s:'2 min'},{l:'B',n:'Leg swings',s:'×10 each direction'},{l:'C',n:'Hip circles',s:'×10 each side'}]},
-      {label:'Proprioception · Balance',exs:[{l:'A',n:'Single leg stand eyes closed',s:'3×5s each — progress from eyes open',note:'Touch wall for safety'},{l:'B',n:'Tandem stance hold',s:'3×15s — one foot directly in front of other'},{l:'C',n:'Head turns on 1 leg',s:'3×5 each — turn head while balancing'}]},
-      {label:'Strength',exs:[{l:'A',n:'Supported squat (hold chair)',s:'3×10'},{l:'B',n:'Incline pushup (hands on bench)',s:'3×8'},{l:'C',n:'Standing calf raise',s:'3×15'}]},
-      {label:'Core',exs:[{l:'A',n:'Seated knee lifts',s:'3×10 each'},{l:'B',n:'Standing side bend',s:'3×10 each side'}]}
+      {label:'Warm-up · 5 min',exs:[{l:'A',n:'Walk in place',s:'2 min',how:'Lift knees to hip height alternating while staying in one spot. Swing arms naturally. Builds circulation before the workout.',vid:'walk in place warm up exercise'},{l:'B',n:'Leg swings',s:'×10 each direction',how:'Hold wall for balance. Swing one leg forward and back like a pendulum. Then side to side. 10 reps each direction.',vid:'leg swings dynamic warm up how to'},{l:'C',n:'Hip circles',s:'×10 each side',how:'Hands on hips, feet shoulder width. Draw large circles with your hips. Upper body stays still.',vid:'hip circles mobility warm up exercise'}]},
+      {label:'Proprioception · Balance',exs:[{l:'A',n:'Single leg stand eyes closed',s:'3×5s each — progress from eyes open',note:'Touch wall for safety',how:'Stand near a wall. Lift one foot slightly. Fix eyes on a point ahead. Standing knee slightly bent — not locked.',vid:'single leg balance exercise how to beginners'},{l:'B',n:'Tandem stance hold',s:'3×15s — one foot directly in front of other',how:'One foot directly in front of the other, heel touching toe. Hold still. Eyes open first, then close for challenge.',vid:'tandem stance balance exercise how to'},{l:'C',n:'Head turns on 1 leg',s:'3×5 each — turn head while balancing',how:'Balance on one leg. Slowly turn head left and right while holding balance. Challenges your vestibular system.',vid:'single leg balance head turn vestibular proprioception'}]},
+      {label:'Strength',exs:[{l:'A',n:'Supported squat (hold chair)',s:'3×10',how:'Hold chair for confidence. Feet shoulder width, toes slightly out. Sit back and down. Chair is just for safety.',vid:'supported squat with chair how to beginners'},{l:'B',n:'Incline pushup (hands on bench)',s:'3×8',how:'Hands on bench slightly wider than shoulders. Body in a straight line. Lower chest to bench, push back up.',vid:'incline pushup how to form beginners'},{l:'C',n:'Standing calf raise',s:'3×15',how:'Stand on step edge or flat floor. Rise onto toes, hold 1 second, lower slowly 3 counts. Full range.',vid:'calf raise how to proper form'}]},
+      {label:'Core',exs:[{l:'A',n:'Seated knee lifts',s:'3×10 each',how:'Sit tall at chair edge, hands on sides. Lift one knee toward chest, lower slowly. Alternate. Back stays straight.',vid:'seated knee lift core exercise beginners'},{l:'B',n:'Standing side bend',s:'3×10 each side',how:'Stand feet hip width, one arm overhead. Lean to side, other hand slides down leg. Feel the stretch on the extended side.',vid:'standing side bend exercise how to'}]}
     ]},
     5:{name:'Cardio Base + Strength',phases:[
-      {label:'Cardio warm-up',exs:[{l:'A',n:'Walk brisk',s:'5 min'}]},
-      {label:'Proprioception',exs:[{l:'A',n:'Single leg balance with arm reach',s:'3×10s each — reach arm forward while standing on 1 leg',note:'Build spatial awareness'},{l:'B',n:'Slow lateral step',s:'2×10 each — step sideways slow + controlled'}]},
-      {label:'Circuit · 2 rounds',exs:[{l:'A',n:'Sit-to-stand',s:'×12'},{l:'B',n:'Wall pushup',s:'×12'},{l:'C',n:'Standing march',s:'×20 steps'},{l:'D',n:'Calf raises',s:'×15'}]},
-      {label:'Spartan prep',exs:[{l:'A',n:'Practice getting up from floor',s:'5× — this is an obstacle skill',note:'Spartan walls require floor transitions'}]}
+      {label:'Cardio warm-up',exs:[{l:'A',n:'Walk brisk',s:'5 min',how:'Pick up the pace from a stroll. Slightly breathless but still able to speak. Swing arms, keep posture tall.',vid:'brisk walking how to exercise beginners'}]},
+      {label:'Proprioception',exs:[{l:'A',n:'Single leg balance with arm reach',s:'3×10s each — reach arm forward while standing on 1 leg',note:'Build spatial awareness',how:'Stand near wall. Lift one foot. Fix eyes on a point. Progress from eyes open to eyes closed over weeks.',vid:'single leg balance proprioception exercise'},{l:'B',n:'Slow lateral step',s:'2×10 each — step sideways slow + controlled',how:'Step sideways with one foot, bring the other foot to meet it. Slow and controlled. Builds hip abductor strength and lateral stability.',vid:'lateral step exercise how to beginners side step'}]},
+      {label:'Circuit · 2 rounds',exs:[{l:'A',n:'Sit-to-stand',s:'×12',how:'Sit at chair edge, feet shoulder width. Lean forward slightly, push through heels to fully stand. Lower back down slowly — 3 count.',vid:'sit to stand exercise how to beginners chair squat'},{l:'B',n:'Wall pushup',s:'×12',how:'Stand an arm length from wall. Hands at chest height. Lean in until nose nearly touches wall, push back. Keep body straight.',vid:'wall pushup how to beginners upper body'},{l:'C',n:'Standing march',s:'×20 steps',how:'Lift knees to hip height alternating while walking forward. Exaggerate the knee drive. Warms up the hip flexors.',vid:'standing march high knees warm up exercise'},{l:'D',n:'Calf raises',s:'×15',how:'Stand on step edge or flat floor. Rise onto toes, hold 1 second, lower slowly 3 counts. Full range.',vid:'calf raise how to proper form'}]},
+      {label:'Spartan prep',exs:[{l:'A',n:'Practice getting up from floor',s:'5× — this is an obstacle skill',note:'Spartan walls require floor transitions',how:'From lying on floor, get to standing without using hands if possible. A real Spartan skill — obstacles require ground transitions.',vid:'get up from floor movement skill exercise'}]}
     ]},
     6:{name:'Walk Day',phases:[
-      {label:'Your mission',exs:[{l:'A',n:'Walk continuously',s:'20–30 min goal',note:'Conversational pace. This is your cardio base.'},{l:'B',n:'Every 5 min — pause and balance',s:'10s each leg',note:'Turn your walk into proprioception training'}]}
+      {label:'Your mission',exs:[{l:'A',n:'Walk continuously',s:'20–30 min goal',note:'Conversational pace. This is your cardio base.',how:'Brisk pace — slightly breathless but able to speak in sentences. Swing arms, heel-toe footstrike.',vid:'brisk walking technique form exercise'},{l:'B',n:'Every 5 min — pause and balance',s:'10s each leg',note:'Turn your walk into proprioception training',how:'Every 5 minutes during your walk, pause and stand on one leg for 10 seconds each side. Trains balance in a fatigued state.',vid:'single leg balance walking break proprioception'}]}
     ]}
   },
   2:{ // RISE
     1:{name:'Strength + Balance',phases:[
-      {label:'Activation · 5 min',exs:[{l:'A',n:'Leg swings fwd/bck',s:'×10 each'},{l:'B',n:'Hip circles',s:'×10 each'},{l:'C',n:'Arm circles',s:'×10 each'}]},
-      {label:'Proprioception',exs:[{l:'A',n:'Single leg balance',s:'3×15s each — eyes open then closed',note:'Progress to eyes closed week 3+'},{l:'B',n:'Single leg heel raise',s:'3×10 each — slow lower',note:'Ankle stability'},{l:'C',n:'Lateral balance reach',s:'3×8 each — stand on 1 leg, reach other foot out to side'}]},
-      {label:'Strength · Machine/Bodyweight',exs:[{l:'A',n:'Goblet squat (light DB)',s:'3×12',how:'Hold a dumbbell vertically at your chest. Feet shoulder width, toes slightly out. Sit back and down keeping chest up and knees tracking over toes.',vid:'goblet squat how to beginners dumbbell'},{l:'B',n:'DB row (each arm)',s:'3×10'},{l:'C',n:'Pushup (modified ok)',s:'3×8'},{l:'D',n:'Glute bridge',s:'3×15'}]},
-      {label:'Core',exs:[{l:'A',n:'Plank hold',s:'3×20s'},{l:'B',n:'Dead bug',s:'3×8 each'}]}
+      {label:'Activation · 5 min',exs:[{l:'A',n:'Leg swings fwd/bck',s:'×10 each',how:'Hold wall for balance. Swing one leg forward and back like a pendulum. Then side to side. 10 reps each direction.',vid:'leg swings dynamic warm up how to'},{l:'B',n:'Hip circles',s:'×10 each',how:'Hands on hips, feet shoulder width. Draw large circles with your hips. Upper body stays still.',vid:'hip circles mobility warm up exercise'},{l:'C',n:'Arm circles',s:'×10 each',how:'Extend arms to sides. Make small circles forward 10 times, then reverse. Gradually increase size.',vid:'arm circles warm up shoulder mobility'}]},
+      {label:'Proprioception',exs:[{l:'A',n:'Single leg balance',s:'3×15s each — eyes open then closed',note:'Progress to eyes closed week 3+',how:'Stand near wall. Lift one foot. Fix eyes on a point. Progress from eyes open to eyes closed over weeks.',vid:'single leg balance proprioception exercise'},{l:'B',n:'Single leg heel raise',s:'3×10 each — slow lower',note:'Ankle stability',how:'Stand on one foot. Rise onto toes, hold 1 second, lower slowly 3-4 counts. Builds ankle stability.',vid:'single leg calf raise heel raise how to'},{l:'C',n:'Lateral balance reach',s:'3×8 each — stand on 1 leg, reach other foot out to side',how:'Stand on one leg. Reach the free leg out to the side as far as possible, then return. Standing knee slightly bent.',vid:'lateral balance reach proprioception single leg'}]},
+      {label:'Strength · Machine/Bodyweight',exs:[{l:'A',n:'Goblet squat (light DB)',s:'3×12',how:'Hold a dumbbell vertically at your chest. Feet shoulder width, toes slightly out. Sit back and down keeping chest up and knees tracking over toes.',vid:'goblet squat how to beginners dumbbell'},{l:'B',n:'DB row (each arm)',s:'3×10',how:'One hand and knee on bench. Other arm pulls DB to hip, elbow drives straight back. Keep back flat.',vid:'single arm dumbbell row how to form'},{l:'C',n:'Pushup (modified ok)',s:'3×8',how:'Hands slightly wider than shoulders. Body straight head to heels. Lower chest to floor — full range. Elbows at 45 degrees.',vid:'pushup perfect form how to tutorial'},{l:'D',n:'Glute bridge',s:'3×15',how:'Lie on back, knees bent, feet flat. Drive hips up by squeezing glutes. Hold at top 1 second. Lower slowly.',vid:'glute bridge how to form beginners'}]},
+      {label:'Core',exs:[{l:'A',n:'Plank hold',s:'3×20s',how:'Forearms on floor, elbows under shoulders. Body straight head to heels. Squeeze glutes, abs, and quads. Breathe normally.',vid:'plank exercise how to proper form'},{l:'B',n:'Dead bug',s:'3×8 each',how:'Lie on back, arms up, knees at 90 degrees. Lower one arm and opposite leg together. Lower back stays pressed to floor.',vid:'dead bug exercise core stability how to'}]}
     ]},
     3:{name:'Pull + Core + Balance',phases:[
-      {label:'Activation',exs:[{l:'A',n:'Band pull-aparts',s:'2×15'},{l:'B',n:'Leg swings',s:'×10 each'},{l:'C',n:'Thoracic rotation',s:'×10 each side'}]},
-      {label:'Proprioception',exs:[{l:'A',n:'Single leg RDL (no weight)',s:'3×8 each — hinge at hip, free leg extends back',note:'Biggest balance challenge yet',how:'Stand on one leg, soft knee. Push hips back while free leg extends behind you. Keep back flat. Return to standing. Think T-shape at bottom.',vid:'single leg RDL how to beginners no weight'},{l:'B',n:'Tandem walk eyes closed',s:'2×10 steps',note:'Heel to toe, hands out for balance'}]},
-      {label:'Strength',exs:[{l:'A',n:'Lat pulldown or band pull-down',s:'3×10'},{l:'B',n:'Seated cable row or band row',s:'3×12'},{l:'C',n:'Face pulls or band pull-apart',s:'3×15'}]},
-      {label:'Core + Spartan prep',exs:[{l:'A',n:'Plank',s:'3×25s'},{l:'B',n:'Hanging knee raise or lying knee raise',s:'3×10'},{l:'C',n:'Burpee practice — slow',s:'3×3',note:'Learn the movement. Step back, step forward.',how:'1) Stand. 2) Hands to floor. 3) Step one foot back, then the other (plank position). 4) Step feet forward. 5) Stand and reach up. Go SLOW.',vid:'how to do a burpee step by step beginners'}]}
+      {label:'Activation',exs:[{l:'A',n:'Band pull-aparts',s:'2×15',how:'Hold band in front at shoulder width. Pull apart until arms extended out to sides. Control the return.',vid:'band pull apart shoulder health exercise'},{l:'B',n:'Leg swings',s:'×10 each',how:'Hold wall for balance. Swing one leg forward and back like a pendulum. Then side to side. 10 reps each direction.',vid:'leg swings dynamic warm up how to'},{l:'C',n:'Thoracic rotation',s:'×10 each side',how:'Sit or kneel, hands behind head. Rotate upper back left and right. Lower back stays still.',vid:'thoracic rotation mobility exercise how to'}]},
+      {label:'Proprioception',exs:[{l:'A',n:'Single leg RDL (no weight)',s:'3×8 each — hinge at hip, free leg extends back',note:'Biggest balance challenge yet',how:'Stand on one leg, soft knee. Push hips back while free leg extends behind you. Keep back flat. Return to standing. Think T-shape at bottom.',vid:'single leg RDL how to beginners no weight'},{l:'B',n:'Tandem walk eyes closed',s:'2×10 steps',note:'Heel to toe, hands out for balance',how:'Heel to toe walking with your eyes closed. Arms out for safety. The lack of visual input forces your balance system to work much harder.',vid:'tandem walk eyes closed balance exercise vestibular'}]},
+      {label:'Strength',exs:[{l:'A',n:'Lat pulldown or band pull-down',s:'3×10',how:'Grip bar wider than shoulders, slight lean back. Pull bar to upper chest — elbows drive down and back. Control return.',vid:'lat pulldown how to form cable machine'},{l:'B',n:'Seated cable row or band row',s:'3×12',how:'Sit tall, feet on platform or floor. Pull handle to lower sternum, elbows drive straight back. Squeeze shoulder blades together at end.',vid:'seated cable row band row how to form'},{l:'C',n:'Face pulls or band pull-apart',s:'3×15',how:'Cable at eye height with rope. Pull to your face, elbows flared high. External rotation at end. Great for shoulder health.',vid:'face pulls how to form cable rotator cuff'}]},
+      {label:'Core + Spartan prep',exs:[{l:'A',n:'Plank',s:'3×25s',how:'Forearms on floor, elbows under shoulders. Body straight head to heels. Squeeze glutes, abs, and quads. Breathe normally.',vid:'plank exercise how to proper form'},{l:'B',n:'Hanging knee raise or lying knee raise',s:'3×10',how:'Hang from bar. Bring both knees to chest, hold 1 second, lower slowly. Keep shoulders engaged — do not shrug.',vid:'hanging knee raise how to abs'},{l:'C',n:'Burpee practice — slow',s:'3×3',note:'Learn the movement. Step back, step forward.',how:'1) Stand. 2) Hands to floor. 3) Step one foot back, then the other (plank position). 4) Step feet forward. 5) Stand and reach up. Go SLOW.',vid:'how to do a burpee step by step beginners'}]}
     ]},
     5:{name:'Push + Cardio + Balance',phases:[
-      {label:'Warm-up',exs:[{l:'A',n:'5 min bike or row machine',s:'Easy pace'}]},
-      {label:'Proprioception',exs:[{l:'A',n:'Single leg squat to box (sit then stand)',s:'3×8 each',note:'Control the descent'},{l:'B',n:'Eyes-closed single leg balance',s:'3×10s each — reach arms forward'}]},
-      {label:'Push',exs:[{l:'A',n:'DB chest press or pushup',s:'3×10'},{l:'B',n:'DB shoulder press',s:'3×10'},{l:'C',n:'Tricep pushdown or dip',s:'3×10'}]},
-      {label:'Cardio finisher',exs:[{l:'A',n:'Walk/jog intervals',s:'10 min — 1 min jog / 1 min walk',note:'This is your Spartan run base'}]}
+      {label:'Warm-up',exs:[{l:'A',n:'5 min bike or row machine',s:'Easy pace',how:'Keep resistance easy. Smooth pedal stroke on bike or long fluid pulls on rower. This is just warming up your joints — not a workout yet.',vid:'stationary bike warm up how to rowing machine warm up'}]},
+      {label:'Proprioception',exs:[{l:'A',n:'Single leg squat to box (sit then stand)',s:'3×8 each',note:'Control the descent',how:'Stand on one leg in front of a box. Sit back and down slowly onto it. Stand back up. Control every inch of the descent.',vid:'single leg squat to box pistol progression'},{l:'B',n:'Eyes-closed single leg balance',s:'3×10s each — reach arms forward',how:'Stand near wall. Lift one foot. Fix eyes on a point. Progress from eyes open to eyes closed over weeks.',vid:'single leg balance proprioception exercise'}]},
+      {label:'Push',exs:[{l:'A',n:'DB chest press or pushup',s:'3×10',how:'Hands slightly wider than shoulders. Body straight head to heels. Lower chest to floor — full range. Elbows at 45 degrees.',vid:'pushup perfect form how to tutorial'},{l:'B',n:'DB shoulder press',s:'3×10',how:'DBs at shoulder height, elbows slightly forward. Press overhead until arms extended. Core tight. Lower with control.',vid:'dumbbell shoulder press how to form'},{l:'C',n:'Tricep pushdown or dip',s:'3×10',how:'Cable or band at chest height. Elbows pinned at sides. Push down until arms fully extended. Slow return.',vid:'tricep pushdown cable how to form'}]},
+      {label:'Cardio finisher',exs:[{l:'A',n:'Walk/jog intervals',s:'10 min — 1 min jog / 1 min walk',note:'This is your Spartan run base',how:'Easy conversational pace. Short stride, land under hips. Relaxed shoulders. You should be able to hold a full conversation.',vid:'jogging form how to beginners running technique'}]}
     ]},
     6:{name:'Run/Walk + Obstacles',phases:[
-      {label:'Cardio',exs:[{l:'A',n:'Walk/jog',s:'25–30 min — aim for 50% jogging'},{l:'B',n:'Balance challenge during walk',s:'Every 5 min — 10s single leg stand'}]},
-      {label:'Obstacle prep',exs:[{l:'A',n:'Crawl under table or low object',s:'3× — bear crawl'},{l:'B',n:'Step over obstacles',s:'5× high step each leg'}]}
+      {label:'Cardio',exs:[{l:'A',n:'Walk/jog',s:'25–30 min — aim for 50% jogging',how:'Easy conversational pace. Short stride, land under hips. Relaxed shoulders. You should be able to hold a full conversation.',vid:'jogging form how to beginners running technique'},{l:'B',n:'Balance challenge during walk',s:'Every 5 min — 10s single leg stand',how:'Every 5 minutes of walking, pause and balance on one leg for 10 seconds each side. Turns a cardio walk into a proprioception session.',vid:'balance challenge walking single leg stand how to'}]},
+      {label:'Obstacle prep',exs:[{l:'A',n:'Crawl under table or low object',s:'3× — bear crawl',how:'Get on hands and knees. Move forward keeping body low. This is a bear crawl under a low obstacle.',vid:'bear crawl low obstacle training exercise'},{l:'B',n:'Step over obstacles',s:'5×5 high step each leg',how:'Lift one knee high, step over obstacle. Keep balance. Builds hip flexor strength and obstacle coordination.',vid:'high step over obstacle training exercise'}]}
     ]}
   },
   3:{ // BUILD
     1:{name:'Legs + Shoulders + Propioception',phases:[
-      {label:'Activation',exs:[{l:'A',n:'Backward walking',s:'2 min — knees over toes'},{l:'B',n:'Tibialis raises',s:'2×15'},{l:'C',n:'Band pull-aparts',s:'2×15'}]},
-      {label:'Proprioception',exs:[{l:'A',n:'Single leg RDL with light DB',s:'3×8 each',note:'Control = more important than weight'},{l:'B',n:'Bosu or foam pad single leg stand',s:'3×15s each',note:'Unstable surface challenge'},{l:'C',n:'Lateral lunge to balance',s:'3×8 each — lunge side, return to single leg stand'}]},
-      {label:'Strength',exs:[{l:'A',n:'Goblet squat',s:'4×12'},{l:'B',n:'DB shoulder press',s:'3×10'},{l:'C',n:'Romanian deadlift',s:'3×10'},{l:'D',n:'Lateral raises',s:'3×12'}]},
-      {label:'Spartan finisher',exs:[{l:'A',n:'Burpees',s:'3×8'},{l:'B',n:'Farmer carry',s:'2×40 steps — DB each hand'}]}
+      {label:'Activation',exs:[{l:'A',n:'Backward walking',s:'2 min — knees over toes',how:'Walk backward slowly, knees slightly bent. Land softly. Knees track over toes. Bulletproofs the knee from the back side.',vid:'backward walking knee health kneesovertoesguy'},{l:'B',n:'Tibialis raises',s:'2×15',how:'Back against wall, feet out in front. Curl toes toward shin, hold 1 second, lower. Burns the front of the shin — protects your knees.',vid:'tibialis raise wall exercise kneesovertoesguy'},{l:'C',n:'Band pull-aparts',s:'2×15',how:'Hold band in front at shoulder width. Pull apart until arms extended out to sides. Control the return.',vid:'band pull apart shoulder health exercise'}]},
+      {label:'Proprioception',exs:[{l:'A',n:'Single leg RDL with light DB',s:'3×8 each',note:'Control = more important than weight',how:'Stand on one leg, soft knee. Push hips BACK while free leg extends behind you. Back stays flat. Think T-shape at bottom.',vid:'single leg RDL how to beginners no weight'},{l:'B',n:'Bosu or foam pad single leg stand',s:'3×15s each',note:'Unstable surface challenge',how:'Stand near a wall. Lift one foot slightly. Fix eyes on a point ahead. Standing knee slightly bent — not locked.',vid:'single leg balance exercise how to beginners'},{l:'C',n:'Lateral lunge to balance',s:'3×8 each — lunge side, return to single leg stand',how:'Step wide to side, sit into that hip. Push back to standing, hold balance on one leg 1 second before next rep.',vid:'lateral lunge to balance proprioception exercise'}]},
+      {label:'Strength',exs:[{l:'A',n:'Goblet squat',s:'4×12',how:'Hold dumbbell at chest. Feet shoulder width, toes out. Sit back and down keeping chest up. Drive through heels.',vid:'goblet squat how to beginners dumbbell'},{l:'B',n:'DB shoulder press',s:'3×10',how:'DBs at shoulder height, elbows slightly forward. Press overhead until arms extended. Core tight. Lower with control.',vid:'dumbbell shoulder press how to form'},{l:'C',n:'Romanian deadlift',s:'3×10',how:'Hinge at hips with soft knee bend. Push hips BACK not down. Bar or DBs stay close to legs. Drive hips forward to stand.',vid:'romanian deadlift how to form tutorial'},{l:'D',n:'Lateral raises',s:'3×12',how:'DBs at sides, slight elbow bend. Raise arms to shoulder height, leading with elbows. Lower slowly.',vid:'lateral raise dumbbell how to form shoulder'}]},
+      {label:'Spartan finisher',exs:[{l:'A',n:'Burpees',s:'3×8',how:'1-Stand 2-Hands to floor 3-Step or jump feet back to plank 4-Chest to floor 5-Push up 6-Jump feet forward 7-Jump and clap overhead. Go slow at first.',vid:'how to do a burpee perfect form step by step beginners'},{l:'B',n:'Farmer carry',s:'2×40 steps — DB each hand',how:'Pick up heavy DBs, stand tall, walk with control. Shoulders back and down, core tight. Do not lean to either side.',vid:'farmer carry how to form Spartan exercise'}]}
     ]},
     3:{name:'Back + Core + Balance',phases:[
-      {label:'Activation',exs:[{l:'A',n:'Dead hang',s:'2×20s',how:'Grip the bar with both hands shoulder width apart. Let your body hang fully, arms straight. Shoulders engaged — dont let them scrunch up to ears.',vid:'dead hang how to grip strength beginners'},{l:'B',n:'Face pulls',s:'2×15'},{l:'C',n:'Hip 90/90 stretch',s:'45s each'}]},
-      {label:'Proprioception',exs:[{l:'A',n:'Single leg RDL to row',s:'3×8 each — hinge + row DB simultaneously',note:'Combines balance + pull'},{l:'B',n:'Standing on 1 leg — head rotations',s:'3×8 each — proprioception challenge'}]},
-      {label:'Strength',exs:[{l:'A',n:'Lat pulldown',s:'4×10'},{l:'B',n:'Seated row',s:'3×12'},{l:'C',n:'Face pulls',s:'3×15'}]},
-      {label:'Core + Obstacle',exs:[{l:'A',n:'Plank',s:'3×40s'},{l:'B',n:'Hanging knee raise',s:'3×12'},{l:'C',n:'Rope or towel pull (seated)',s:'3×10',note:'Rope climb prep'},{l:'D',n:'Burpees',s:'3×10'}]}
+      {label:'Activation',exs:[{l:'A',n:'Dead hang',s:'2×20s',how:'Grip the bar with both hands shoulder width apart. Let your body hang fully, arms straight. Shoulders engaged — dont let them scrunch up to ears.',vid:'dead hang how to grip strength beginners'},{l:'B',n:'Face pulls',s:'2×15',how:'Cable at eye height with rope. Pull to your face, elbows flared high. External rotation at end. Great for shoulder health.',vid:'face pulls how to form cable rotator cuff'},{l:'C',n:'Hip 90/90 stretch',s:'45s each',how:'Sit on floor, front leg at 90 degrees, back leg at 90 degrees. Lean over front shin gently. Hold 30-45 seconds.',vid:'hip 90 90 stretch how to tutorial'}]},
+      {label:'Proprioception',exs:[{l:'A',n:'Single leg RDL to row',s:'3×8 each — hinge + row DB simultaneously',note:'Combines balance + pull',how:'Stand on one leg, soft knee. Push hips BACK while free leg extends behind you. Back stays flat. Think T-shape at bottom.',vid:'single leg RDL how to beginners no weight'},{l:'B',n:'Standing on 1 leg — head rotations',s:'3×8 each — proprioception challenge',how:'Balance on one leg. The additional challenge (head turns, catching, rowing) makes your balance system work much harder.',vid:'single leg balance challenge exercise proprioception'}]},
+      {label:'Strength',exs:[{l:'A',n:'Lat pulldown',s:'4×10',how:'Grip bar wider than shoulders, slight lean back. Pull bar to upper chest — elbows drive down and back. Control return.',vid:'lat pulldown how to form cable machine'},{l:'B',n:'Seated row',s:'3×12',how:'Sit upright, feet on platform. Pull handle to lower sternum, elbows drive back. Squeeze shoulder blades at end.',vid:'seated cable row how to form machine'},{l:'C',n:'Face pulls',s:'3×15',how:'Cable at eye height with rope. Pull to your face, elbows flared high. External rotation at end. Great for shoulder health.',vid:'face pulls how to form cable rotator cuff'}]},
+      {label:'Core + Obstacle',exs:[{l:'A',n:'Plank',s:'3×40s',how:'Forearms on floor, elbows under shoulders. Body straight head to heels. Squeeze glutes, abs, and quads. Breathe normally.',vid:'plank exercise how to proper form'},{l:'B',n:'Hanging knee raise',s:'3×12',how:'Hang from bar. Bring both knees to chest, hold 1 second, lower slowly. Keep shoulders engaged — do not shrug.',vid:'hanging knee raise how to abs'},{l:'C',n:'Rope or towel pull (seated)',s:'3×10',note:'Rope climb prep',how:'Loop towel over pull-up bar. Grip both ends. Pull yourself up. Simulates the grip demand of rope climbing at Spartan.',vid:'towel pull up rope climb substitute how to'},{l:'D',n:'Burpees',s:'3×10',how:'1-Stand 2-Hands to floor 3-Step or jump feet back to plank 4-Chest to floor 5-Push up 6-Jump feet forward 7-Jump and clap overhead. Go slow at first.',vid:'how to do a burpee perfect form step by step beginners'}]}
     ]},
     5:{name:'Chest + Run + Balance',phases:[
-      {label:'Activation',exs:[{l:'A',n:'Jog 5 min',s:'Easy'},{l:'B',n:'Dynamic lunge',s:'×10 each'}]},
-      {label:'Proprioception',exs:[{l:'A',n:'Split squat hold',s:'3×15s each — front foot elevated, balance at bottom',note:'Lunge stability'},{l:'B',n:'Single leg calf raise',s:'3×12 each — slow eccentric'}]},
-      {label:'Strength',exs:[{l:'A',n:'DB bench press',s:'3×10'},{l:'B',n:'Cable crossover or pec deck',s:'3×12'},{l:'C',n:'Tricep dips',s:'3×8'}]},
-      {label:'Run intervals',exs:[{l:'A',n:'Run/jog intervals',s:'15 min — 2 min run / 1 min walk',note:'Build the run base for Spartan 5K'}]}
+      {label:'Activation',exs:[{l:'A',n:'Jog 5 min',s:'Easy',how:'Easy conversational pace. Short stride, land under hips. Relaxed shoulders. You should be able to hold a full conversation.',vid:'jogging form how to beginners running technique'},{l:'B',n:'Dynamic lunge',s:'×10 each',how:'Step forward into lunge. Push back to start. Each rep steps forward. Keep front knee tracking over toe.',vid:'dynamic lunge how to form tutorial'}]},
+      {label:'Proprioception',exs:[{l:'A',n:'Split squat hold',s:'3×15s each — front foot elevated, balance at bottom',note:'Lunge stability',how:'Lunge position, front foot slightly elevated. Hold at the bottom. Feel the stretch and burn in the front leg.',vid:'split squat hold isometric lunge how to'},{l:'B',n:'Single leg calf raise',s:'3×12 each — slow eccentric',how:'Stand on step edge or flat floor. Rise onto toes, hold 1 second, lower slowly 3 counts. Full range.',vid:'calf raise how to proper form'}]},
+      {label:'Strength',exs:[{l:'A',n:'DB bench press',s:'3×10',how:'Grip just wider than shoulders. Bar to lower chest. Elbows at 45 degrees. Drive bar up and slightly back.',vid:'bench press how to form tutorial'},{l:'B',n:'Cable crossover or pec deck',s:'3×12',how:'Cable: arms out to sides, pull down and together in a hugging arc — feel the squeeze at the front. Pec deck: sit with elbows on pads, bring arms together.',vid:'cable crossover pec deck how to form chest exercise'},{l:'C',n:'Tricep dips',s:'3×8',how:'Hands on bench behind you, feet forward. Lower until upper arms parallel to floor. Push back up. Hips close to bench.',vid:'tricep dips bench how to form'}]},
+      {label:'Run intervals',exs:[{l:'A',n:'Run/jog intervals',s:'15 min — 2 min run / 1 min walk',note:'Build the run base for Spartan 5K',how:'Easy conversational pace. Short stride, land under hips. Relaxed shoulders. You should be able to hold a full conversation.',vid:'jogging form how to beginners running technique'}]}
     ]},
     6:{name:'Long Run + Obstacle Drills',phases:[
-      {label:'Run',exs:[{l:'A',n:'Continuous jog',s:'20–25 min — easy pace'},{l:'B',n:'Proprioception break every 5 min',s:'Single leg RDL ×5 each side'}]},
-      {label:'Obstacle prep',exs:[{l:'A',n:'Bear crawl',s:'3×20 steps'},{l:'B',n:'Burpees',s:'3×10'},{l:'C',n:'Box jump or step up',s:'3×8'}]}
+      {label:'Run',exs:[{l:'A',n:'Continuous jog',s:'20–25 min — easy pace',how:'Easy conversational pace. Short stride, land under hips. Relaxed shoulders. You should be able to hold a full conversation.',vid:'jogging form how to beginners running technique'},{l:'B',n:'Proprioception break every 5 min',s:'Single leg RDL ×5 each side',how:'During your run, every 5 minutes stop and do 5 single leg RDLs each side. This trains balance in a fatigued state — exactly what obstacles demand.',vid:'single leg RDL running break proprioception fatigue state'}]},
+      {label:'Obstacle prep',exs:[{l:'A',n:'Bear crawl',s:'3×20 steps',how:'Hands and feet on floor, knees hovering 1 inch off ground. Move opposite hand and foot together. Hips stay level.',vid:'bear crawl exercise how to form'},{l:'B',n:'Burpees',s:'3×10',how:'1-Stand 2-Hands to floor 3-Step or jump feet back to plank 4-Chest to floor 5-Push up 6-Jump feet forward 7-Jump and clap overhead. Go slow at first.',vid:'how to do a burpee perfect form step by step beginners'},{l:'C',n:'Box jump or step up',s:'3×8',how:'Stand arms length from box. Load hips, swing arms, explode up. Land softly with bent knees. Always step down — never jump down.',vid:'box jump how to form tutorial beginners'}]}
     ]}
   },
   4:{ // DRIVE
     1:{name:'Power Lower + Propioception',phases:[
-      {label:'Activation',exs:[{l:'A',n:'Backward walking',s:'2 min'},{l:'B',n:'Tibialis raises',s:'2×20'},{l:'C',n:'ATG split squat hold',s:'20s each'}]},
-      {label:'Proprioception',exs:[{l:'A',n:'Single leg squat progression',s:'3×6 each — pistol squat practice to box',note:'Control matters more than depth'},{l:'B',n:'BOSU single leg squat',s:'3×8 each'},{l:'C',n:'Lateral bound + stick landing',s:'3×5 each — jump sideways, land on 1 foot, hold 2s'}]},
-      {label:'Strength',exs:[{l:'A',n:'Barbell or DB squat',s:'4×8'},{l:'B',n:'Romanian deadlift',s:'3×10'},{l:'C',n:'Bulgarian split squat',s:'3×8 each'},{l:'D',n:'Box jump',s:'3×8'}]},
-      {label:'Spartan circuit',exs:[{l:'A',n:'Burpees',s:'3×15'},{l:'B',n:'Farmer carry heavy',s:'2×40 steps'},{l:'C',n:'Dead hang',s:'Max time ×3'}]}
+      {label:'Activation',exs:[{l:'A',n:'Backward walking',s:'2 min',how:'Walk backward slowly, knees slightly bent. Land softly. Knees track over toes. Bulletproofs the knee from the back side.',vid:'backward walking knee health kneesovertoesguy'},{l:'B',n:'Tibialis raises',s:'2×20',how:'Back against wall, feet out in front. Curl toes toward shin, hold 1 second, lower. Burns the front of the shin — protects your knees.',vid:'tibialis raise wall exercise kneesovertoesguy'},{l:'C',n:'ATG split squat hold',s:'20s each',how:'Lunge with front knee tracking as far over toes as possible. Back knee hovering just off floor. Full range lunge.',vid:'ATG split squat how to kneesovertoesguy'}]},
+      {label:'Proprioception',exs:[{l:'A',n:'Single leg squat progression',s:'3×6 each — pistol squat practice to box',note:'Control matters more than depth',how:'Stand on one leg in front of a box. Sit back slowly until you touch the box, then stand. The box removes fear and controls range. Lower the box over weeks.',vid:'single leg squat pistol progression box how to'},{l:'B',n:'BOSU single leg squat',s:'3×8 each',how:'Step onto dome side of BOSU or folded mat. Balance on one leg. Unstable surface makes ankle and hip stabilizers work harder.',vid:'BOSU single leg squat balance exercise'},{l:'C',n:'Lateral bound + stick landing',s:'3×5 each — jump sideways, land on 1 foot, hold 2s',how:'Jump sideways off one foot, land on other, hold 2 seconds. Control the landing by absorbing with a bent knee.',vid:'lateral bound stick landing plyometric exercise'}]},
+      {label:'Strength',exs:[{l:'A',n:'Barbell or DB squat',s:'4×8',how:'Bar on upper traps or DBs at shoulders. Feet shoulder width, toes slightly out. Sit back and down to full depth. Drive through heels. Chest stays tall.',vid:'barbell dumbbell squat how to form tutorial'},{l:'B',n:'Romanian deadlift',s:'3×10',how:'Hinge at hips with soft knee bend. Push hips BACK not down. Bar or DBs stay close to legs. Drive hips forward to stand.',vid:'romanian deadlift how to form tutorial'},{l:'C',n:'Bulgarian split squat',s:'3×8 each',how:'Back foot elevated on bench, front foot forward. Lower back knee toward floor. Keep front shin as vertical as possible.',vid:'Bulgarian split squat how to form tutorial'},{l:'D',n:'Box jump',s:'3×8',how:'Stand arms length from box. Load hips, swing arms, explode up. Land softly with bent knees. Always step down — never jump down.',vid:'box jump how to form tutorial beginners'}]},
+      {label:'Spartan circuit',exs:[{l:'A',n:'Burpees',s:'3×15',how:'1-Stand 2-Hands to floor 3-Step or jump feet back to plank 4-Chest to floor 5-Push up 6-Jump feet forward 7-Jump and clap overhead. Go slow at first.',vid:'how to do a burpee perfect form step by step beginners'},{l:'B',n:'Farmer carry heavy',s:'2×40 steps',how:'Pick up heavy DBs, stand tall, walk with control. Shoulders back and down, core tight. Do not lean to either side.',vid:'farmer carry how to form Spartan exercise'},{l:'C',n:'Dead hang',s:'Max time ×3',how:'Grip bar shoulder width. Body hangs completely, arms straight. Shoulders engaged — do not shrug. Builds grip and decompresses spine.',vid:'dead hang how to grip strength tutorial'}]}
     ]},
     3:{name:'Pull + Grip + Balance',phases:[
-      {label:'Activation',exs:[{l:'A',n:'Dead hang',s:'2×30s'},{l:'B',n:'Band pull-aparts',s:'2×15'},{l:'C',n:'Thoracic CARs',s:'×10'}]},
-      {label:'Proprioception',exs:[{l:'A',n:'Single leg RDL to row — eyes closed',s:'3×6 each',note:'Eyes closed = maximum proprioception demand'},{l:'B',n:'Standing on 1 leg — catch and throw',s:'3×10 each — toss ball against wall or to partner'}]},
-      {label:'Strength',exs:[{l:'A',n:'Pull-ups or lat pulldown',s:'4×8'},{l:'B',n:'Chest-supported row',s:'3×10'},{l:'C',n:'Face pulls',s:'3×15'},{l:'D',n:'Towel pull (grip training)',s:'3×max'}]},
-      {label:'Obstacle circuit',exs:[{l:'A',n:'Rope climb or towel pull',s:'3×max'},{l:'B',n:'Burpees',s:'3×15'},{l:'C',n:'Sandbag carry',s:'2×40 steps'}]}
+      {label:'Activation',exs:[{l:'A',n:'Dead hang',s:'2×30s',how:'Grip bar shoulder width. Body hangs completely, arms straight. Shoulders engaged — do not shrug. Builds grip and decompresses spine.',vid:'dead hang how to grip strength tutorial'},{l:'B',n:'Band pull-aparts',s:'2×15',how:'Hold band in front at shoulder width. Pull apart until arms extended out to sides. Control the return.',vid:'band pull apart shoulder health exercise'},{l:'C',n:'Thoracic CARs',s:'×10',how:'Sit or stand. Rotate your upper back through its full range — forward, side, back, other side — like drawing a circle with your chest. Keep lower back still.',vid:'thoracic CARs controlled articular rotation how to FRC'}]},
+      {label:'Proprioception',exs:[{l:'A',n:'Single leg RDL to row — eyes closed',s:'3×6 each',note:'Eyes closed = maximum proprioception demand',how:'Stand on one leg, soft knee. Push hips BACK while free leg extends behind you. Back stays flat. Think T-shape at bottom.',vid:'single leg RDL how to beginners no weight'},{l:'B',n:'Standing on 1 leg — catch and throw',s:'3×10 each — toss ball against wall or to partner',how:'Balance on one leg. The additional challenge (head turns, catching, rowing) makes your balance system work much harder.',vid:'single leg balance challenge exercise proprioception'}]},
+      {label:'Strength',exs:[{l:'A',n:'Pull-ups or lat pulldown',s:'4×8',how:'Grip bar wider than shoulders, slight lean back. Pull bar to upper chest — elbows drive down and back. Control return.',vid:'lat pulldown how to form cable machine'},{l:'B',n:'Chest-supported row',s:'3×10',how:'Lie chest on incline bench. Pull DBs to ribcage, elbows at 45 degrees. Squeeze shoulder blades together.',vid:'chest supported row dumbbell how to form'},{l:'C',n:'Face pulls',s:'3×15',how:'Cable at eye height with rope. Pull to your face, elbows flared high. External rotation at end. Great for shoulder health.',vid:'face pulls how to form cable rotator cuff'},{l:'D',n:'Towel pull (grip training)',s:'3×max',how:'Loop towel over pull-up bar. Grip both ends. Pull yourself up. Simulates the grip demand of rope climbing at Spartan.',vid:'towel pull up rope climb substitute how to'}]},
+      {label:'Obstacle circuit',exs:[{l:'A',n:'Rope climb or towel pull',s:'3×max',how:'Jump to rope, grip above head. Pull up while driving knees up. Grip lower on rope, stand up on feet. Practice the J-hook foot technique.',vid:'rope climb how to technique J hook Spartan'},{l:'B',n:'Burpees',s:'3×15',how:'1-Stand 2-Hands to floor 3-Step or jump feet back to plank 4-Chest to floor 5-Push up 6-Jump feet forward 7-Jump and clap overhead. Go slow at first.',vid:'how to do a burpee perfect form step by step beginners'},{l:'C',n:'Sandbag carry',s:'2×40 steps',how:'Pick up sandbag in bear hug or over shoulder. Walk with control. Simulates the atlas stone and bucket carry at Spartan.',vid:'sandbag carry exercise Spartan training how to'}]}
     ]},
     5:{name:'Push + Run + Power',phases:[
-      {label:'Activation',exs:[{l:'A',n:'Run 5 min easy',s:''},{l:'B',n:'Dynamic lunge + rotation',s:'×10 each'}]},
-      {label:'Proprioception',exs:[{l:'A',n:'Single leg jump + land',s:'3×5 each — controlled landing, absorb with knee',note:'Obstacle descent training'},{l:'B',n:'Reactive balance — partner tap or self-tap',s:'3×10 — partner taps shoulder, maintain balance'}]},
-      {label:'Strength',exs:[{l:'A',n:'Bench press',s:'4×8'},{l:'B',n:'Dips',s:'3×10'},{l:'C',n:'Overhead press',s:'3×10'}]},
-      {label:'Run',exs:[{l:'A',n:'Run intervals',s:'20 min — 3 min run / 1 min walk'},{l:'B',n:'Hill run or incline treadmill',s:'2×3 min',note:'Spartan terrain prep'}]}
+      {label:'Activation',exs:[{l:'A',n:'Run 5 min easy',s:''},{l:'B',n:'Dynamic lunge + rotation',s:'×10 each',how:'Step forward into lunge. Push back to start. Each rep steps forward. Keep front knee tracking over toe.',vid:'dynamic lunge how to form tutorial'}]},
+      {label:'Proprioception',exs:[{l:'A',n:'Single leg jump + land',s:'3×5 each — controlled landing, absorb with knee',note:'Obstacle descent training',how:'Jump straight up with both feet. Land on one foot only. Hold the landing for 2 seconds before moving. Absorb with a bent knee — never land stiff-legged.',vid:'single leg landing jump proprioception plyometric how to'},{l:'B',n:'Reactive balance — partner tap or self-tap',s:'3×10 — partner taps shoulder, maintain balance',how:'Balance on one leg. Partner taps your shoulder randomly — maintain balance. Or self-tap by touching shin and recovering.',vid:'reactive balance proprioception exercise single leg'}]},
+      {label:'Strength',exs:[{l:'A',n:'Bench press',s:'4×8',how:'Grip just wider than shoulders. Bar to lower chest. Elbows at 45 degrees. Drive bar up and slightly back.',vid:'bench press how to form tutorial'},{l:'B',n:'Dips',s:'3×10',how:'Hands on bars or bench behind you. Lower until upper arms parallel to floor. Push back up. Keep elbows tracking back — not flaring out.',vid:'tricep dips parallel bars how to form'},{l:'C',n:'Overhead press',s:'3×10',how:'Bar at shoulder height. Press overhead in slight arc past face. Full lockout at top.',vid:'overhead press how to form tutorial barbell'}]},
+      {label:'Run',exs:[{l:'A',n:'Run intervals',s:'20 min — 3 min run / 1 min walk',how:'Alternate running hard and walking easy. Run: comfortably hard, short sentences only. Walk: full recovery.',vid:'run walk intervals how to beginners running'},{l:'B',n:'Hill run or incline treadmill',s:'2×3 min',note:'Spartan terrain prep',how:'Find a hill or set treadmill to 6-10% incline. Shorten stride, drive knees. Builds quad strength for Spartan terrain.',vid:'hill run training technique Spartan prep'}]}
     ]},
     6:{name:'Spartan Simulation Run',phases:[
-      {label:'Run + Obstacles',exs:[{l:'A',n:'Run',s:'30 min continuous — Spartan pace'},{l:'B',n:'Every 10 min — stop and do',s:'10 burpees + 20 air squats + 10 pushups',note:'Simulate obstacle penalty stops'}]},
-      {label:'Proprioception cooldown',exs:[{l:'A',n:'Single leg balance',s:'60s each — after run proprioception is key for injury prevention'},{l:'B',n:'Single leg RDL',s:'×10 each — fatigue state balance work'}]}
+      {label:'Run + Obstacles',exs:[{l:'A',n:'Run',s:'30 min continuous — Spartan pace',how:'Maintain a challenging but sustainable pace — you should be breathing hard but able to say a few words. This is your Spartan race pace.',vid:'running pace how to Spartan race training'},{l:'B',n:'Every 10 min — stop and do',s:'10 burpees + 20 air squats + 10 pushups',note:'Simulate obstacle penalty stops',how:'Every 10 minutes of running, stop and complete the bodyweight circuit. This trains your body to perform under running fatigue — the core demand of Spartan.',vid:'obstacle run training stop and go bodyweight circuit Spartan'}]},
+      {label:'Proprioception cooldown',exs:[{l:'A',n:'Single leg balance',s:'60s each — after run proprioception is key for injury prevention',how:'Stand near wall. Lift one foot. Fix eyes on a point. Progress from eyes open to eyes closed over weeks.',vid:'single leg balance proprioception exercise'},{l:'B',n:'Single leg RDL',s:'×10 each — fatigue state balance work',how:'Stand on one leg, soft knee. Push hips BACK while free leg extends behind you. Back stays flat. Think T-shape at bottom.',vid:'single leg RDL how to beginners no weight'}]}
     ]}
   },
   5:{ // FORGE
     1:{name:'Explosive Lower + ATG',phases:[
-      {label:'ATG activation',exs:[{l:'A',n:'Backward sled or backward walking',s:'3 min'},{l:'B',n:'Tibialis raises',s:'2×25'},{l:'C',n:'Reverse Nordic curl',s:'2×8'}]},
-      {label:'Proprioception — elite',exs:[{l:'A',n:'Single leg squat — full pistol progression',s:'3×6 each',note:'Full range pistol squat or max depth'},{l:'B',n:'Jump + single leg landing hold',s:'3×6 each — bilateral jump, single land, 3s hold'},{l:'C',n:'Reactive lateral bound',s:'3×6 each — explosive, single leg landing'}]},
-      {label:'Power + Strength',exs:[{l:'A',n:'Barbell squat',s:'5×5 heavy'},{l:'B',n:'Box jump',s:'4×6 max height'},{l:'C',n:'Bulgarian split squat',s:'3×8 each'},{l:'D',n:'Trap bar deadlift',s:'3×6'}]},
-      {label:'Spartan circuit',exs:[{l:'A',n:'Burpees',s:'3×20'},{l:'B',n:'Sandbag carry upstairs',s:'3× — or heavy farmer carry'},{l:'C',n:'Dead hang to knee raise',s:'3×max'}]}
+      {label:'ATG activation',exs:[{l:'A',n:'Backward sled or backward walking',s:'3 min',how:'Walk backward slowly, knees slightly bent. Land softly. Knees track over toes. Bulletproofs the knee from the back side.',vid:'backward walking knee health kneesovertoesguy'},{l:'B',n:'Tibialis raises',s:'2×25',how:'Back against wall, feet out in front. Curl toes toward shin, hold 1 second, lower. Burns the front of the shin — protects your knees.',vid:'tibialis raise wall exercise kneesovertoesguy'},{l:'C',n:'Reverse Nordic curl',s:'2×8',how:'Kneel on pad, feet anchored. Lower torso backward slowly, hips straight. Pull back up. Most important knee exercise.',vid:'reverse nordic curl how to knee health'}]},
+      {label:'Proprioception — elite',exs:[{l:'A',n:'Single leg squat — full pistol progression',s:'3×6 each',note:'Full range pistol squat or max depth',how:'Stand on one leg with other leg extended forward. Sit all the way down on one leg then stand back up. Hold weight out front as counterbalance if needed.',vid:'pistol squat how to full depth single leg squat tutorial'},{l:'B',n:'Jump + single leg landing hold',s:'3×6 each — bilateral jump, single land, 3s hold',how:'Jump up with both feet, land on one foot only. Hold the landing for 2 seconds. Absorb with bent knee — never land stiff-legged.',vid:'jump to single leg landing how to plyometric'},{l:'C',n:'Reactive lateral bound',s:'3×6 each — explosive, single leg landing',how:'Jump sideways off one foot, land on other, hold 2 seconds. Control the landing by absorbing with a bent knee.',vid:'lateral bound stick landing plyometric exercise'}]},
+      {label:'Power + Strength',exs:[{l:'A',n:'Barbell squat',s:'5×5 heavy',how:'Bar on upper traps. Feet shoulder width, toes out. Sit back and down to full depth. Drive through heels. Chest stays up.',vid:'barbell back squat how to form tutorial'},{l:'B',n:'Box jump',s:'4×6 max height',how:'Stand arms length from box. Load hips, swing arms, explode up. Land softly with bent knees. Always step down — never jump down.',vid:'box jump how to form tutorial beginners'},{l:'C',n:'Bulgarian split squat',s:'3×8 each',how:'Back foot elevated on bench, front foot forward. Lower back knee toward floor. Keep front shin as vertical as possible.',vid:'Bulgarian split squat how to form tutorial'},{l:'D',n:'Trap bar deadlift',s:'3×6',how:'Stand inside trap bar, grip handles. Hinge at hips, back flat, chest up. Drive through floor to standing. Control descent.',vid:'trap bar deadlift how to form tutorial'}]},
+      {label:'Spartan circuit',exs:[{l:'A',n:'Burpees',s:'3×20',how:'1-Stand 2-Hands to floor 3-Step or jump feet back to plank 4-Chest to floor 5-Push up 6-Jump feet forward 7-Jump and clap overhead. Go slow at first.',vid:'how to do a burpee perfect form step by step beginners'},{l:'B',n:'Sandbag carry upstairs',s:'3× — or heavy farmer carry',how:'Pick up sandbag in bear hug or over shoulder. Walk with control. Simulates the atlas stone and bucket carry at Spartan.',vid:'sandbag carry exercise Spartan training how to'},{l:'C',n:'Dead hang to knee raise',s:'3×max',how:'Grip bar shoulder width. Body hangs completely, arms straight. Shoulders engaged — do not shrug. Builds grip and decompresses spine.',vid:'dead hang how to grip strength tutorial'}]}
     ]},
     3:{name:'Pull Power + Rope + Balance',phases:[
-      {label:'Activation',exs:[{l:'A',n:'Dead hang',s:'2×45s'},{l:'B',n:'Scapular pull-ups',s:'2×10'},{l:'C',n:'Face pulls',s:'2×15'}]},
-      {label:'Proprioception — elite',exs:[{l:'A',n:'Single leg RDL — eyes closed + reach',s:'3×8 each',note:'Eyes closed, reach arms forward as you hinge'},{l:'B',n:'Unstable surface single leg squat',s:'3×6 each — BOSU or folded mat'}]},
-      {label:'Strength',exs:[{l:'A',n:'Weighted pull-ups',s:'4×6'},{l:'B',n:'Chest-to-bar pull-ups',s:'3×max'},{l:'C',n:'Rope climb',s:'3× full climb or towel pull max'}]},
-      {label:'Spartan finisher',exs:[{l:'A',n:'Full Spartan circuit',s:'3 rounds: 10 burpees + 10 pushups + 10 pull-ups + 20 air squats'},{l:'B',n:'Farmer carry heavy',s:'3×60 steps'}]}
+      {label:'Activation',exs:[{l:'A',n:'Dead hang',s:'2×45s',how:'Grip bar shoulder width. Body hangs completely, arms straight. Shoulders engaged — do not shrug. Builds grip and decompresses spine.',vid:'dead hang how to grip strength tutorial'},{l:'B',n:'Scapular pull-ups',s:'2×10',how:'Hang from bar, overhand grip shoulder width. Pull until chin clears bar. Full hang at bottom each rep.',vid:'pull up how to form beginners progression'},{l:'C',n:'Face pulls',s:'2×15',how:'Cable at eye height with rope. Pull to your face, elbows flared high. External rotation at end. Great for shoulder health.',vid:'face pulls how to form cable rotator cuff'}]},
+      {label:'Proprioception — elite',exs:[{l:'A',n:'Single leg RDL — eyes closed + reach',s:'3×8 each',note:'Eyes closed, reach arms forward as you hinge',how:'Stand on one leg, soft knee. Push hips BACK while free leg extends behind you. Back stays flat. Think T-shape at bottom.',vid:'single leg RDL how to beginners no weight'},{l:'B',n:'Unstable surface single leg squat',s:'3×6 each — BOSU or folded mat',how:'BOSU ball dome side up or folded yoga mat. The instability makes every movement harder and more beneficial for joint health.',vid:'unstable surface balance training BOSU exercise'}]},
+      {label:'Strength',exs:[{l:'A',n:'Weighted pull-ups',s:'4×6',how:'Hang from bar, overhand grip shoulder width. Pull until chin clears bar. Full hang at bottom each rep.',vid:'pull up how to form beginners progression'},{l:'B',n:'Chest-to-bar pull-ups',s:'3×max',how:'Hang from bar, overhand grip shoulder width. Pull until chin clears bar. Full hang at bottom each rep.',vid:'pull up how to form beginners progression'},{l:'C',n:'Rope climb',s:'3×max full climb or towel pull',how:'Jump to rope, grip above head. Pull up while driving knees up. Grip lower on rope, stand up on feet. Practice the J-hook foot technique.',vid:'rope climb how to technique J hook Spartan'}]},
+      {label:'Spartan finisher',exs:[{l:'A',n:'Full Spartan circuit',s:'3 rounds: 10 burpees + 10 pushups + 10 pull-ups + 20 air squats',how:'3 rounds of burpees + pushups + pull-ups + air squats with minimal rest. This simulates the back-to-back obstacle demand of race day.',vid:'Spartan race training circuit how to'},{l:'B',n:'Farmer carry heavy',s:'3×60 steps',how:'Pick up heavy DBs, stand tall, walk with control. Shoulders back and down, core tight. Do not lean to either side.',vid:'farmer carry how to form Spartan exercise'}]}
     ]},
     5:{name:'Full Spartan Simulation',phases:[
-      {label:'Warm-up run',exs:[{l:'A',n:'Jog 10 min easy',s:''}]},
-      {label:'Proprioception',exs:[{l:'A',n:'Fatigue-state balance',s:'After run — single leg hold 30s each, no touching down'},{l:'B',n:'Jump + obstacles + land',s:'3× — jump over low barrier, single land, hold'}]},
-      {label:'Obstacle circuit',exs:[{l:'A',n:'Run 800m + 10 burpees',s:'3 rounds'},{l:'B',n:'Rope climb or towel pull',s:'3×max'},{l:'C',n:'Sandbag carry',s:'3×50 steps'},{l:'D',n:'30 burpees for time',s:'Your penalty training'}]}
+      {label:'Warm-up run',exs:[{l:'A',n:'Jog 10 min easy',s:'',how:'Easy conversational pace. Short stride, land under hips. Relaxed shoulders. You should be able to hold a full conversation.',vid:'jogging form how to beginners running technique'}]},
+      {label:'Proprioception',exs:[{l:'A',n:'Fatigue-state balance',s:'After run — single leg hold 30s each, no touching down',how:'After your run when your legs are tired, balance on one leg for 30 seconds each side. Fatigued proprioception training is the most specific prep for obstacles.',vid:'balance training after running fatigue state proprioception'},{l:'B',n:'Jump + obstacles + land',s:'3× — jump over low barrier, single land, hold',how:'Jump over a low object, land on one foot, hold for 2 seconds. The single leg landing under fatigue trains the exact demand of clearing obstacles mid-race.',vid:'jump over obstacle single leg landing how to Spartan training'}]},
+      {label:'Obstacle circuit',exs:[{l:'A',n:'Run 800m + 10 burpees',s:'3 rounds',how:'1-Stand 2-Hands to floor 3-Step or jump feet back to plank 4-Chest to floor 5-Push up 6-Jump feet forward 7-Jump and clap overhead. Go slow at first.',vid:'how to do a burpee perfect form step by step beginners'},{l:'B',n:'Rope climb or towel pull',s:'3×max',how:'Jump to rope, grip above head. Pull up while driving knees up. Grip lower on rope, stand up on feet. Practice the J-hook foot technique.',vid:'rope climb how to technique J hook Spartan'},{l:'C',n:'Sandbag carry',s:'3×50 steps',how:'Pick up sandbag in bear hug or over shoulder. Walk with control. Simulates the atlas stone and bucket carry at Spartan.',vid:'sandbag carry exercise Spartan training how to'},{l:'D',n:'30 burpees for time',s:'Your penalty training',how:'1-Stand 2-Hands to floor 3-Step or jump feet back to plank 4-Chest to floor 5-Push up 6-Jump feet forward 7-Jump and clap overhead. Go slow at first.',vid:'how to do a burpee perfect form step by step beginners'}]}
     ]},
     6:{name:'Long Run + Full Spartan',phases:[
-      {label:'Run',exs:[{l:'A',n:'Continuous run',s:'35–40 min at Spartan race pace'},{l:'B',n:'Obstacle stops every 10 min',s:'15 burpees + 15 pushups + 20 air squats'}]},
-      {label:'Proprioception cooldown',exs:[{l:'A',n:'Post-run single leg balance',s:'90s each — fatigue is the real test'},{l:'B',n:'Single leg RDL',s:'×12 each — post-run neural reset'}]}
+      {label:'Run',exs:[{l:'A',n:'Continuous run',s:'35–40 min at Spartan race pace',how:'Run for the full duration at a pace you could sustain for the Spartan Sprint — comfortably hard. Practice your race day breathing and mental focus.',vid:'continuous run training Spartan race pace how to'},{l:'B',n:'Obstacle stops every 10 min',s:'15 burpees + 15 pushups + 20 air squats',how:'Every 10 minutes stop mid-run and do the circuit. This simulates stopping at every obstacle during the Spartan race then having to run again.',vid:'obstacle stop run training Spartan circuit how to'}]},
+      {label:'Proprioception cooldown',exs:[{l:'A',n:'Post-run single leg balance',s:'90s each — fatigue is the real test',how:'Stand near wall. Lift one foot. Fix eyes on a point. Progress from eyes open to eyes closed over weeks.',vid:'single leg balance proprioception exercise'},{l:'B',n:'Single leg RDL',s:'×12 each — post-run neural reset',how:'Stand on one leg, soft knee. Push hips BACK while free leg extends behind you. Back stays flat. Think T-shape at bottom.',vid:'single leg RDL how to beginners no weight'}]}
     ]}
   }
 };
@@ -393,35 +394,40 @@ const WORKOUTS={
 // ── QUIZ QUESTIONS ────────────────────────────────────────
 const QUIZ_QUESTIONS=[
   {section:'Movement Quality',questions:[
-    {id:'q_squat',text:'Can you do 10 air squats with heels on the floor and chest up?',type:'yn'},
-    {id:'q_pushup',text:'Can you do a pushup with your chest touching the floor?',type:'yn'},
-    {id:'q_burpee',text:'Can you do a burpee and fully stand up at the top?',type:'yn'},
-    {id:'q_pullup',text:'Can you do at least 1 full pull-up (chin over bar)?',type:'yn'},
-    {id:'q_deathang',text:'Can you dead hang from a bar for 10 seconds?',type:'yn'},
+    {id:'q_squats',text:'How many air squats can you do in a row with good form? (heels down, chest up, full depth)',type:'number',placeholder:'e.g. 15'},
+    {id:'q_pushups',text:'How many full pushups can you do? (chest to floor, arms fully extended)',type:'number',placeholder:'e.g. 8'},
+    {id:'q_burpees',text:'How many burpees can you do in 1 minute?',type:'number',placeholder:'e.g. 10'},
+    {id:'q_pullups',text:'How many pull-ups can you do? (chin over bar, full hang at bottom)',type:'number',placeholder:'e.g. 0'},
+    {id:'q_deathang',text:'How long can you dead hang from a bar? (seconds)',type:'number',placeholder:'e.g. 20'},
     {id:'q_lunge',text:'Can you do a lunge without your knee caving inward?',type:'yn'},
     {id:'q_toes',text:'Can you touch your toes standing with soft knees?',type:'yn'},
     {id:'q_overhead',text:'Can you raise both arms straight overhead without your lower back arching?',type:'yn'}
   ]},
-  {section:'Proprioception + Balance',questions:[
-    {id:'q_1leg_open',text:'Can you stand on 1 leg for 15 seconds with eyes open?',type:'yn'},
-    {id:'q_1leg_closed',text:'Can you stand on 1 leg for 10 seconds with eyes closed?',type:'yn'},
-    {id:'q_heel_toe',text:'Can you walk heel-to-toe in a straight line for 10 steps?',type:'yn'},
-    {id:'q_head_turn',text:'Can you turn your head side to side while balancing on 1 leg without falling?',type:'yn'},
-    {id:'q_rdl',text:'Can you do a single leg Romanian deadlift (hinge at hip, free leg extends back) without losing balance?',type:'yn'}
+  {section:'Proprioception + Balance — Eyes Open',questions:[
+    {id:'q_1leg_open',text:'Single leg stand — eyes open. How long can you hold without touching down?',type:'mc',opts:["Can't hold","5 seconds","15 seconds","30 seconds","45 seconds","60+ seconds"]},
+    {id:'q_heeltoe_open',text:'Heel-to-toe walk — eyes open. Can you walk 10 steps heel-to-toe in a straight line?',type:'yn'},
+    {id:'q_headturn_open',text:'Head turns on 1 leg — eyes open. Can you turn your head side to side while balancing on 1 leg?',type:'yn'},
+    {id:'q_rdl_open',text:'Single leg RDL — eyes open. Can you hinge forward on one leg without losing balance?',type:'yn'}
+  ]},
+  {section:'Proprioception + Balance — Eyes Closed',questions:[
+    {id:'q_1leg_closed',text:'Single leg stand — eyes CLOSED. How long can you hold without touching down?',type:'mc',opts:["Can't hold","5 seconds","15 seconds","30 seconds","45+ seconds"]},
+    {id:'q_heeltoe_closed',text:'Heel-to-toe walk — eyes CLOSED. Can you walk 5 steps heel-to-toe without losing balance?',type:'yn'},
+    {id:'q_headturn_closed',text:'Head turns on 1 leg — eyes CLOSED. Can you turn your head while balancing on 1 leg with eyes closed?',type:'yn'},
+    {id:'q_rdl_closed',text:'Single leg RDL — eyes CLOSED. Can you do the single leg RDL with eyes closed?',type:'yn'}
   ]},
   {section:'Cardio Base',questions:[
-    {id:'q_walk20',text:'Can you walk for 20 minutes without stopping or getting winded?',type:'yn'},
-    {id:'q_jog5',text:'Can you jog for 5 minutes without stopping?',type:'yn'},
-    {id:'q_run1',text:'Have you run a full mile in the last 6 months?',type:'yn'}
+    {id:'q_walk',text:'Walking — how long can you walk continuously at a brisk pace without stopping or getting winded?',type:'mc',opts:["Less than 10 min","10–15 min","20 min easy pace","20 min brisk pace","30 min brisk pace","40+ min brisk pace"]},
+    {id:'q_jog',text:'Jogging — how long can you jog at a CONVERSATIONAL pace? (You should be able to speak in full sentences the entire time. This is Zone 2 — 60–70% of your max heart rate.)',type:'mc',opts:["Can\'t jog yet","Up to 5 min","Up to 10 min","Up to 15 min","20+ min continuously"]},
+    {id:'q_mile',text:'Have you run a full mile recently?',type:'mc',opts:["Never","Used to but not recently","In the last year","In the last 6 months","I run regularly"]}
   ]},
   {section:'Lifestyle',questions:[
-    {id:'q_sleep',text:'How many hours of sleep do you get most nights?',type:'mc',opts:['Under 5','5–6 hours','7–8 hours','8+ hours']},
+    {id:'q_sleep',text:'How many hours of sleep do you get most nights?',type:'mc',opts:['Under 5 hours','5–6 hours','7–8 hours','8+ hours']},
     {id:'q_water',text:'How much water do you drink daily?',type:'mc',opts:['Under 32oz','32–64oz','64–96oz','96oz+']},
-    {id:'q_energy',text:'How would you rate your current energy levels?',type:'mc',opts:['1 — Exhausted','2 — Low','3 — Average','4 — Good','5 — Great']},
+    {id:'q_energy',text:'How would you rate your current energy levels on a typical day?',type:'mc',opts:['1 — Exhausted all the time','2 — Usually tired','3 — Average','4 — Usually good','5 — High energy']},
     {id:'q_injury',text:'Do you have any current injuries or pain that limits movement?',type:'yn'},
     {id:'q_injury_parts',text:'If yes — which areas? (tap all that apply)',type:'multi',opts:['Knee','Hip','Shoulder','Lower back','Ankle','Wrist / Elbow','Neck','General — doctor restrictions'],showIf:{id:'q_injury',val:'yes'}},
     {id:'q_injury_other',text:'Anything else to describe your injury?',type:'text_optional',showIf:{id:'q_injury',val:'yes'}},
-    {id:'q_barrier',text:"What's your biggest barrier to fitness right now?",type:'mc',opts:['Not enough time','Lack of motivation','Don\'t know what to do','Physical limitations','None — I\'m ready']}
+    {id:'q_barrier',text:"What\'s your biggest barrier to fitness right now?",type:'mc_vertical',opts:['Not enough time','Lack of motivation','Not sure what to do','Physical limitations','None — I am ready']}
   ]}
 ];
 
@@ -485,14 +491,33 @@ function saveUserProfile(){
   if(SHEET){jsonp(SHEET+'?action=set&key='+encodeURIComponent(userKey())+'&value='+encodeURIComponent(JSON.stringify(profile))).catch(()=>{})}
   registerUser();
 }
-function registerUser(){
+async function registerUser(){
   const listKey='ohs_users';
-  let users=[];try{const l=localStorage.getItem(listKey);if(l)users=JSON.parse(l);}catch(e){}
+  let users=[];
+  // Always load latest from sheet first so we don't overwrite others
+  if(SHEET){
+    try{
+      const r=await jsonp(SHEET+'?action=get&key='+encodeURIComponent(listKey));
+      if(r&&r.status==='found'&&r.value){
+        users=JSON.parse(r.value);
+        try{localStorage.setItem(listKey,r.value);}catch(e){}
+      }
+    }catch(e){
+      // Fall back to localStorage
+      try{const l=localStorage.getItem(listKey);if(l)users=JSON.parse(l);}catch(e2){}
+    }
+  } else {
+    try{const l=localStorage.getItem(listKey);if(l)users=JSON.parse(l);}catch(e){}
+  }
   const idx=users.findIndex(u=>u.pin===pin);
-  const entry={name:userName,pin,tier:userTier};
+  const entry={name:userName,pin,tier:userTier,lastSeen:new Date().toISOString()};
   if(idx>=0)users[idx]=entry;else users.push(entry);
   try{localStorage.setItem(listKey,JSON.stringify(users));}catch(e){}
-  if(SHEET){jsonp(SHEET+'?action=set&key='+encodeURIComponent(listKey)+'&value='+encodeURIComponent(JSON.stringify(users))).catch(()=>{})}
+  if(SHEET){
+    try{
+      await jsonp(SHEET+'?action=set&key='+encodeURIComponent(listKey)+'&value='+encodeURIComponent(JSON.stringify(users)));
+    }catch(e){}
+  }
 }
 function g(p,d=null){const pts=p.split('.');let o=state;for(const x of pts){if(o==null||typeof o!=='object')return d;o=o[x];}return o!=null?o:d;}
 function sv(p,v){const pts=p.split('.');let o=state;for(let i=0;i<pts.length-1;i++){if(!o[pts[i]])o[pts[i]]={};o=o[pts[i]];}o[pts[pts.length-1]]=v;sched();}
@@ -601,6 +626,8 @@ function launchApp(){
     }
   }catch(e){}
   sb('s','Connecting...');
+  // Register/update user in squad list on every login
+  setTimeout(()=>registerUser(),1500);
   const tier=TIERS[userTier];
   document.getElementById('tierPill').textContent=tier.emoji+' '+tier.name;
   document.getElementById('tierPill').style.background=tier.color;
@@ -627,6 +654,15 @@ function renderQuiz(){
         <div class="quiz-opts">`;
       if(q.showIf&&quizAnswers[q.showIf.id]!==q.showIf.val){
         H+=`<div style="font-size:11px;color:#bbb;font-style:italic;padding:4px 0">Select "Yes" above to unlock this</div>`;
+      } else if(q.type==='number'){
+        H+=`<div style="display:flex;align-items:center;gap:10px">
+          <input type="number" inputmode="numeric" min="0" max="999"
+            value="${quizAnswers[q.id]||''}"
+            placeholder="${q.placeholder||'Enter number'}"
+            oninput="quizAnswers['${q.id}']=this.value;updateQuizProgress()"
+            style="width:120px;padding:10px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--cream);font-size:18px;font-weight:700;text-align:center;outline:none">
+          ${quizAnswers[q.id]?`<div style="font-size:12px;color:var(--g);font-weight:600">${getTierForAnswer(q.id,quizAnswers[q.id])}</div>`:''}
+        </div>`;
       } else if(q.type==='yn'){
         H+=`<button class="quiz-opt-yn ${quizAnswers[q.id]==='yes'?'sel-y':''}" onclick="setAnswer('${q.id}','yes',this,'yn')">✓ Yes</button>
             <button class="quiz-opt-yn ${quizAnswers[q.id]==='no'?'sel-n':''}" onclick="setAnswer('${q.id}','no',this,'yn')">✗ No</button>`;
@@ -653,6 +689,51 @@ function renderQuiz(){
   });
   H+=`<button class="quiz-submit" onclick="submitQuiz()">Calculate My Fitness Tier →</button>`;
   body.innerHTML=H;
+}
+function updateQuizProgress(){
+  const total=QUIZ_QUESTIONS.reduce((a,s)=>a+s.questions.length,0);
+  const done=Object.keys(quizAnswers).length;
+  const el=document.getElementById('quizProgress');
+  if(el)el.style.width=Math.round((done/total)*100)+'%';
+}
+function getTierForAnswer(id,val){
+  const n=parseInt(val)||0;
+  if(id==='q_squats'){
+    if(n>=36)return '⚔️ Forge level';
+    if(n>=26)return '🔥 Drive level';
+    if(n>=16)return '💪 Build level';
+    if(n>=6)return '🌱 Rise level';
+    return '✨ Spark level';
+  }
+  if(id==='q_pushups'){
+    if(n>=26)return '⚔️ Forge level';
+    if(n>=16)return '🔥 Drive level';
+    if(n>=9)return '💪 Build level';
+    if(n>=4)return '🌱 Rise level';
+    return '✨ Spark level';
+  }
+  if(id==='q_burpees'){
+    if(n>=21)return '⚔️ Forge level';
+    if(n>=13)return '🔥 Drive level';
+    if(n>=7)return '💪 Build level';
+    if(n>=3)return '🌱 Rise level';
+    return '✨ Spark level';
+  }
+  if(id==='q_pullups'){
+    if(n>=11)return '⚔️ Forge level';
+    if(n>=6)return '🔥 Drive level';
+    if(n>=3)return '💪 Build level';
+    if(n>=1)return '🌱 Rise level';
+    return '✨ Spark — try dead hang';
+  }
+  if(id==='q_deathang'){
+    if(n>=46)return '⚔️ Forge level';
+    if(n>=31)return '🔥 Drive level';
+    if(n>=16)return '💪 Build level';
+    if(n>=6)return '🌱 Rise level';
+    return '✨ Keep working on it';
+  }
+  return '';
 }
 function toggleMulti(id,val,el){
   if(!quizAnswers[id])quizAnswers[id]=[];
@@ -687,33 +768,61 @@ function setAnswer(id,val,el,type){
   document.getElementById('quizProgress').style.width=Math.round((done/total)*100)+'%';
 }
 function submitQuiz(){
-  // Calculate tier from answers
   let score=0;
+  const ans=(id)=>quizAnswers[id];
+  const num=(id)=>parseInt(quizAnswers[id])||0;
   const yes=(id)=>quizAnswers[id]==='yes';
-  // Movement (7 questions)
-  if(yes('q_squat'))score+=2;
-  if(yes('q_pushup'))score+=2;
-  if(yes('q_burpee'))score+=3;
-  if(yes('q_pullup'))score+=3;
+
+  // ── MOVEMENT SCORING ─────────────────────────────────────
+  // Air squats (max 5 pts)
+  const sq=num('q_squats');
+  score+=sq>=36?5:sq>=26?4:sq>=16?3:sq>=6?2:sq>=1?1:0;
+  // Pushups (max 5 pts)
+  const pu=num('q_pushups');
+  score+=pu>=26?5:pu>=16?4:pu>=9?3:pu>=4?2:pu>=1?1:0;
+  // Burpees (max 5 pts)
+  const bu=num('q_burpees');
+  score+=bu>=21?5:bu>=13?4:bu>=7?3:bu>=3?2:bu>=1?1:0;
+  // Pull-ups (max 5 pts)
+  const pl=num('q_pullups');
+  score+=pl>=11?5:pl>=6?4:pl>=3?3:pl>=1?2:0;
+  // Dead hang (max 4 pts)
+  const dh=num('q_deathang');
+  score+=dh>=46?4:dh>=31?3:dh>=16?2:dh>=6?1:0;
+  // Form checks
   if(yes('q_lunge'))score+=1;
   if(yes('q_toes'))score+=1;
   if(yes('q_overhead'))score+=1;
-  // Balance (5 questions)
-  if(yes('q_1leg_open'))score+=1;
-  if(yes('q_1leg_closed'))score+=2;
-  if(yes('q_heel_toe'))score+=1;
-  if(yes('q_head_turn'))score+=2;
-  if(yes('q_rdl'))score+=3;
-  // Cardio
-  if(yes('q_walk20'))score+=1;
-  if(yes('q_jog5'))score+=2;
-  if(yes('q_run1'))score+=2;
 
-  // Assign tier
-  if(score<=5)userTier=1;
-  else if(score<=10)userTier=2;
-  else if(score<=16)userTier=3;
-  else if(score<=22)userTier=4;
+  // ── BALANCE SCORING ──────────────────────────────────────
+  // Single leg eyes open
+  const slo=ans('q_1leg_open')||'';
+  score+=slo.includes('60+')?4:slo.includes('45')?3:slo.includes('30')?2:slo.includes('15')?1:0;
+  // Single leg eyes closed
+  const slc=ans('q_1leg_closed')||'';
+  score+=slc.includes('45+')?4:slc.includes('30')?3:slc.includes('15')?2:slc.includes('5 sec')?1:0;
+  // Other balance
+  if(yes('q_heeltoe_open'))score+=1;
+  if(yes('q_heeltoe_closed'))score+=2;
+  if(yes('q_headturn_open'))score+=1;
+  if(yes('q_headturn_closed'))score+=2;
+  if(yes('q_rdl_open'))score+=2;
+  if(yes('q_rdl_closed'))score+=3;
+
+  // ── CARDIO SCORING ───────────────────────────────────────
+  const wk=ans('q_walk')||'';
+  score+=wk.includes('40+')?4:wk.includes('30')?3:wk.includes('brisk')?2:wk.includes('easy')?1:0;
+  const jg=ans('q_jog')||'';
+  score+=jg.includes('20+')?4:jg.includes('15')?3:jg.includes('10')?2:jg.includes('5')?1:0;
+  const ml=ans('q_mile')||'';
+  score+=ml.includes('regularly')?3:ml.includes('6 months')?2:ml.includes('year')?1:0;
+
+  // ── ASSIGN TIER ──────────────────────────────────────────
+  // Max possible score ~55
+  if(score<=8)userTier=1;
+  else if(score<=18)userTier=2;
+  else if(score<=30)userTier=3;
+  else if(score<=42)userTier=4;
   else userTier=5;
 
   const tier=TIERS[userTier];
@@ -738,7 +847,9 @@ function submitQuiz(){
 }
 function finalizeAccount(){
   const injuryParts=quizAnswers.q_injury==='yes'?(quizAnswers.q_injury_parts||[]):[];
-  const profile={name:userName,pin,tier:userTier,quizAnswers,injuries:injuryParts,lastSeen:new Date().toISOString()};
+  // Load existing profile to preserve birthday, startDate etc
+  let existing={};try{const p=localStorage.getItem('ohs_user_'+pin);if(p)existing=JSON.parse(p);}catch(e){}
+  const profile={...existing,name:userName,pin,tier:userTier,quizAnswers,injuries:injuryParts,nudgeDismissed:true,lastSeen:new Date().toISOString()};
   try{localStorage.setItem('ohs_user_'+pin,JSON.stringify(profile));}catch(e){}
   // Save injuries to state for workout modification
   sv('profile.injuries',JSON.stringify(injuryParts));
@@ -874,10 +985,34 @@ function renderDaily(){
         const injNote=getInjuryNote(ex.n,userInjuries);
         const exKey=`${dk}.ex.${pi}_${ei}`;
         const exDone=g(`${exKey}.done`,false);
-        // Cardio/timed: has 'min', 'sec', 'steps', or is a walk/run/jog/carry/hold
-        const isCardio=ex.s&&(/min|sec|steps|walk|jog|run/i.test(ex.s)||/walk|jog|run|carry|hang|hold|march|crawl|bike|row/i.test(ex.n));
-        // Strength: has × with numbers like 3×10, 2×15 etc — but NOT cardio
-        const hasWeight=!isCardio&&ex.s&&/\d+[×x]\d+/.test(ex.s);
+        // Classify exercise type for correct logging
+        const exName=(ex.n||'').toLowerCase();
+        const exSets=(ex.s||'').toLowerCase();
+
+        // ROUNDS: "X rounds" or "3×" with no reps (like 3×max, 3×)
+        const isRounds=exSets.includes('round')||/^\d+[×x](?:max|full|$)/.test(exSets.trim())||/^\d+[×x] —/.test(exSets)||/^\d+×$/.test(exSets.trim());
+
+        // TIMED: seconds holds, balance, planks, stretches, hangs
+        const isTimed=!isRounds&&(
+          /\b\d+s\b|\bsec\b/.test(exSets)||
+          /\bhold\b|\bstretch\b|\bstance\b/.test(exSets)||
+          /plank|dead hang|stretch|stance|hip 90/.test(exName)
+        );
+
+        // CARDIO: time-based, step-based, or movement-based
+        const isCardio=!isRounds&&!isTimed&&(
+          /\bmin\b|\bsteps\b|easy pace/.test(exSets)||
+          /^(walk|jog|run|march|crawl|bike|row|hill run|continuous|every \d|obstacle stop|proprioception break|balance challenge|every 5)/.test(exName)||
+          /burpee.*time|penalty training/.test(exSets)||
+          /30 burpees for time/.test(exName)||
+          /stop and do/.test(exName)
+        );
+
+        // REP-BASED: × notation (×10, ×12 etc without sets prefix)
+        const isReps=!isRounds&&!isCardio&&!isTimed&&/^[×x]\d+/.test(exSets.trim());
+
+        // STRENGTH: sets×reps like 3×10, 2×15
+        const hasWeight=!isRounds&&!isCardio&&!isTimed&&!isReps&&/\d+[×x]\d+/.test(exSets);
         H+=`<div class="ex-row" style="flex-direction:column;align-items:stretch">
           <div style="display:flex;align-items:flex-start;gap:8px">
             <div onclick="tog('${exKey}.done');renderAll()" style="cursor:pointer">
@@ -889,20 +1024,36 @@ function renderDaily(){
               <div class="ex-sets">${ex.s}</div>
               ${ex.note?`<div class="ex-note">💡 ${ex.note}</div>`:''}
               ${injNote?`<div style="font-size:10px;color:#c02828;margin-top:2px;font-weight:600">${injNote}</div>`:''}
-            </div>
+            ${ex.how?`<div style="font-size:11px;color:#555;margin-top:5px;padding:6px 9px;background:var(--cream);border-radius:6px;border-left:2px solid var(--g);line-height:1.6">📋 ${ex.how}</div>`:''}
+            ${ex.vid?`<a href="https://www.youtube.com/results?search_query=${encodeURIComponent(ex.vid)}" target="_blank" style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--g);text-decoration:none;border:1px solid #a8d8b8;border-radius:5px;padding:3px 8px;margin-top:5px;background:var(--gl)">▶ Watch how to</a>`:''}
           </div>
+        </div>
           ${hasWeight?`<div style="display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:4px;margin-top:6px;margin-left:28px;align-items:center">
             <div style="font-size:10px;color:var(--muted);padding:3px 5px">Log</div>
             <div style="font-size:10px;font-weight:600;color:var(--muted);text-align:center">Weight</div>
             <div style="font-size:10px;font-weight:600;color:var(--muted);text-align:center">Reps</div>
             <div style="font-size:10px;font-weight:600;color:var(--muted);text-align:center">Notes</div>
           </div>
-          ${[1,2,3].map(sn=>`<div style="display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:4px;margin-top:2px;margin-left:28px;align-items:center">
+          ${[1,2].map(sn=>`<div style="display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:4px;margin-top:2px;margin-left:28px;align-items:center">
             <div style="font-size:10px;color:var(--muted);padding:3px 5px">Set ${sn}</div>
             <input type="text" value="${g(`${exKey}.s${sn}.w`,'')}" oninput="sv('${exKey}.s${sn}.w',this.value)" placeholder="lbs" style="text-align:center;padding:4px;font-size:11px">
             <input type="text" value="${g(`${exKey}.s${sn}.r`,'')}" oninput="sv('${exKey}.s${sn}.r',this.value)" placeholder="reps" style="text-align:center;padding:4px;font-size:11px">
             <input type="text" value="${g(`${exKey}.s${sn}.n`,'')}" oninput="sv('${exKey}.s${sn}.n',this.value)" placeholder="..." style="padding:4px;font-size:11px">
           </div>`).join('')}`
+          :isRounds?`<div style="margin-top:6px;margin-left:28px">
+            <div style="font-size:10px;color:var(--muted);margin-bottom:4px;font-weight:600">LOG EACH ROUND</div>
+            ${(()=>{const roundMatch=ex.s.match(/(\d+)\s*round/i);const numRounds=roundMatch?parseInt(roundMatch[1]):3;return Array.from({length:numRounds},(_,ri)=>`<div style="display:grid;grid-template-columns:auto 1fr 1fr;gap:4px;margin-top:2px;align-items:center"><div style="font-size:10px;color:var(--muted);padding:3px 5px">Round ${ri+1}</div><input type="text" value="${g(`${exKey}.r${ri+1}.time`,'')}" oninput="sv('${exKey}.r${ri+1}.time',this.value)" placeholder="time / reps" style="text-align:center;padding:4px;font-size:11px"><input type="text" value="${g(`${exKey}.r${ri+1}.notes`,'')}" oninput="sv('${exKey}.r${ri+1}.notes',this.value)" placeholder="how it felt..." style="padding:4px;font-size:11px"></div>`).join('');})()}
+          </div>`
+          :isTimed?`<div style="display:grid;grid-template-columns:auto 1fr 1fr;gap:4px;margin-top:6px;margin-left:28px;align-items:center">
+            <div style="font-size:10px;color:var(--muted);padding:3px 5px">Log</div>
+            <div style="font-size:10px;font-weight:600;color:var(--muted);text-align:center">Time held</div>
+            <div style="font-size:10px;font-weight:600;color:var(--muted);text-align:center">Notes</div>
+          </div>
+          <div style="display:grid;grid-template-columns:auto 1fr 1fr;gap:4px;margin-top:2px;margin-left:28px;align-items:center">
+            <div style="font-size:10px;color:var(--muted);padding:3px 5px">Done</div>
+            <input type="text" value="${g(`${exKey}.time`,'')}" oninput="sv('${exKey}.time',this.value)" placeholder="e.g. 45s" style="text-align:center;padding:4px;font-size:11px">
+            <input type="text" value="${g(`${exKey}.feel`,'')}" oninput="sv('${exKey}.feel',this.value)" placeholder="Easy / Hard..." style="padding:4px;font-size:11px">
+          </div>`
           :isCardio?`<div style="display:grid;grid-template-columns:auto 1fr 1fr;gap:4px;margin-top:6px;margin-left:28px;align-items:center">
             <div style="font-size:10px;color:var(--muted);padding:3px 5px">Log</div>
             <div style="font-size:10px;font-weight:600;color:var(--muted);text-align:center">Time / Distance</div>
@@ -910,8 +1061,12 @@ function renderDaily(){
           </div>
           <div style="display:grid;grid-template-columns:auto 1fr 1fr;gap:4px;margin-top:2px;margin-left:28px;align-items:center">
             <div style="font-size:10px;color:var(--muted);padding:3px 5px">Done</div>
-            <input type="text" value="${g(`${exKey}.time`,'')}" oninput="sv('${exKey}.time',this.value)" placeholder="e.g. 20 min" style="text-align:center;padding:4px;font-size:11px">
+            <input type="text" value="${g(`${exKey}.time`,'')}" oninput="sv('${exKey}.time',this.value)" placeholder="e.g. 20 min / 1.5 mi" style="text-align:center;padding:4px;font-size:11px">
             <input type="text" value="${g(`${exKey}.feel`,'')}" oninput="sv('${exKey}.feel',this.value)" placeholder="Easy / Hard..." style="padding:4px;font-size:11px">
+          </div>`
+          :isReps?`<div style="display:grid;grid-template-columns:auto 1fr;gap:4px;margin-top:6px;margin-left:28px;align-items:center">
+            <div style="font-size:10px;color:var(--muted);padding:3px 5px">Log</div>
+            <input type="text" value="${g(`${exKey}.reps`,'')}" oninput="sv('${exKey}.reps',this.value)" placeholder="Reps completed" style="padding:4px;font-size:11px">
           </div>`:''}
         </div>`;
       });
@@ -1022,6 +1177,12 @@ function renderFitness(){
   mc.innerHTML=H;
 }
 
+function dismissNudge(){
+  let profile={};try{const p=localStorage.getItem('ohs_user_'+pin);if(p)profile=JSON.parse(p);}catch(e){}
+  profile.nudgeDismissed=true;
+  try{localStorage.setItem('ohs_user_'+pin,JSON.stringify(profile));}catch(e){}
+  renderAll();
+}
 function retakeTier(){
   quizAnswers={};
   document.getElementById('mainApp').style.display='none';
@@ -1103,12 +1264,26 @@ async function renderLeaderboard(){
   const mc=document.getElementById('lbContent');
   mc.innerHTML='<div class="spin-wrap"><div class="spinner"></div></div>';
 
-  // Load all users
+  // Load all users — merge sheet and local
   let users=[];
+  let sheetUsers=[];
+  let localUsers=[];
   if(SHEET){
-    try{const r=await jsonp(SHEET+'?action=get&key=ohs_users');if(r&&r.status==='found'&&r.value)users=JSON.parse(r.value);}catch(e){}
+    try{
+      const r=await jsonp(SHEET+'?action=get&key=ohs_users');
+      if(r&&r.status==='found'&&r.value){
+        sheetUsers=JSON.parse(r.value);
+        try{localStorage.setItem('ohs_users',r.value);}catch(e){}
+      }
+    }catch(e){}
   }
-  if(!users.length){try{const l=localStorage.getItem('ohs_users');if(l)users=JSON.parse(l);}catch(e){}}
+  try{const l=localStorage.getItem('ohs_users');if(l)localUsers=JSON.parse(l);}catch(e){}
+  // Merge — sheet is authoritative, add any local-only users
+  users=[...sheetUsers];
+  for(const lu of localUsers){
+    if(!users.find(u=>u.pin===lu.pin))users.push(lu);
+  }
+  if(!users.length)users=localUsers;
 
   // Load current week data for each user
   const now=new Date(),wd=now.getDay(),ws=new Date(now);ws.setDate(now.getDate()-wd);
@@ -1132,7 +1307,12 @@ async function renderLeaderboard(){
     if(data[wkFitKey]){
       fitnessScore=FITNESS_PILLARS.reduce((a,p)=>a+(parseInt(data[wkFitKey][p.key])||0),0);
     }
-    memberData.push({...u,sessions,burpees,hang,fitnessScore,isMe:u.pin===pin});
+    // Load age from profile
+    let memberAge=u.age||null;
+    if(!memberAge){
+      try{const pk=localStorage.getItem('ohs_user_'+u.pin);if(pk){const pp=JSON.parse(pk);memberAge=pp.age||null;}}catch(e){}
+    }
+    memberData.push({...u,sessions,burpees,hang,fitnessScore,isMe:u.pin===pin,age:memberAge});
   }
 
   // Sort by F.I.T.N.E.S.S. score
@@ -1142,9 +1322,12 @@ async function renderLeaderboard(){
   let H='';
 
   // HEADER
-  H+=`<div style="margin-bottom:14px">
-    <div style="font-size:26px;font-weight:800;color:var(--g)">OHS Squad</div>
-    <div style="font-size:12px;color:var(--muted);margin-top:2px">${sorted.length} members · Week ${getTrainingWeek()} · F.I.T.N.E.S.S. rankings</div>
+  H+=`<div style="margin-bottom:10px;display:flex;align-items:flex-end;justify-content:space-between">
+    <div>
+      <div style="font-size:26px;font-weight:800;color:var(--g)">OHS Squad</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:2px">${users.length} members · Week ${getTrainingWeek()} · F.I.T.N.E.S.S. rankings</div>
+    </div>
+    <button onclick="renderLeaderboard()" style="padding:6px 12px;border-radius:7px;border:1px solid var(--border);background:white;color:var(--g);font-size:11px;font-weight:600;cursor:pointer">↻ Refresh</button>
   </div>`;
 
   // FULL SQUAD BY TIER
@@ -1229,6 +1412,10 @@ function renderSettings(){
     <div style="margin-bottom:10px">
       <label class="lbl">Your name</label>
       <input type="text" id="settingsName" value="${esc(userName)}" placeholder="Your first name">
+    </div>
+    <div style="margin-bottom:10px">
+      <label class="lbl">Birthday <span style="font-size:10px;color:var(--muted);font-weight:400;text-transform:none">(used to calculate your personal heart rate zones)</span></label>
+      <input type="date" id="settingsBirthday" value="${profile.birthday||''}" style="padding:8px 10px;border-radius:6px;border:1px solid var(--border);background:var(--cream);font-size:13px;width:100%;outline:none">
     </div>
     <div style="margin-bottom:10px;padding:10px 12px;background:var(--cream);border-radius:8px;border:1px solid var(--border)">
       <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:3px">Training started · Week ${weekNum}</div>
