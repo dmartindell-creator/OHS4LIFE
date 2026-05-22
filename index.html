@@ -1130,7 +1130,7 @@ async function renderLeaderboard(){
     const trainingWeek=getTrainingWeek();
     const wkFitKey=`fitness_wk${trainingWeek}`;
     if(data[wkFitKey]){
-      fitnessScore=['F','I','T','N','E','S','S2'].reduce((a,l)=>a+(parseInt(data[wkFitKey][l==='S2'?'S':l])||0),0);
+      fitnessScore=FITNESS_PILLARS.reduce((a,p)=>a+(parseInt(data[wkFitKey][p.key])||0),0);
     }
     memberData.push({...u,sessions,burpees,hang,fitnessScore,isMe:u.pin===pin});
   }
@@ -1139,6 +1139,7 @@ async function renderLeaderboard(){
   const sorted=[...memberData].sort((a,b)=>b.fitnessScore-a.fitnessScore||b.sessions-a.sessions);
 
   const maxFit=FITNESS_PILLARS.length*9;
+  let H='';
 
   // HEADER
   H+=`<div style="margin-bottom:14px">
