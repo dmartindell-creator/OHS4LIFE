@@ -273,8 +273,8 @@ const WORKOUTS={
   1:{ // SPARK
     1:{name:'Full Body Foundation',phases:[
       {label:'Warm-up · 5 min',exs:[{l:'A',n:'March in place',s:'2 min',note:'Lift knees high, swing arms'},{l:'B',n:'Arm circles',s:'×10 each direction'},{l:'C',n:'Ankle rolls',s:'×10 each'}]},
-      {label:'Proprioception · Balance',exs:[{l:'A',n:'Single leg stand',s:'3×10s each leg — eyes open',note:'Touch wall if needed'},{l:'B',n:'Heel-to-toe walk',s:'10 steps forward + back',note:'Like a sobriety test — eyes forward'},{l:'C',n:'Weight shifts side to side',s:'2×10 — slow and controlled'}]},
-      {label:'Strength · Bodyweight',exs:[{l:'A',n:'Sit-to-stand from chair',s:'3×10 — no hands',note:'This IS a squat'},{l:'B',n:'Wall pushup',s:'3×10'},{l:'C',n:'Standing hip hinge',s:'3×10 — bend at hips, soft knees'}]},
+      {label:'Proprioception · Balance',exs:[{l:'A',n:'Single leg stand',s:'3×10s each leg — eyes open',note:'Touch wall if needed',how:'Stand near a wall for safety. Lift one foot slightly off floor. Focus on a fixed point ahead. Keep standing knee soft, not locked.',vid:'single leg balance exercise beginners'},{l:'B',n:'Heel-to-toe walk',s:'10 steps forward + back',note:'Like a sobriety test — eyes forward',how:'Place one foot directly in front of the other so heel touches toe with each step. Arms out for balance. Go slow.',vid:'heel to toe walking balance exercise'},{l:'C',n:'Weight shifts side to side',s:'2×10 — slow and controlled'}]},
+      {label:'Strength · Bodyweight',exs:[{l:'A',n:'Sit-to-stand from chair',s:'3×10 — no hands',note:'This IS a squat',how:'Sit at edge of chair, feet shoulder width, lean forward slightly, push through heels to stand fully. Lower back down slowly.',vid:'sit to stand exercise how to beginners'},{l:'B',n:'Wall pushup',s:'3×10',how:'Stand an arm length from wall, hands at chest height. Lean in until nose nearly touches wall, push back. Keep body straight like a plank.',vid:'wall pushup how to beginners'},{l:'C',n:'Standing hip hinge',s:'3×10 — bend at hips, soft knees',how:'Stand with feet hip width. Push hips BACK (not down), keep back flat, slight knee bend. Feel the stretch in your hamstrings then return to standing.',vid:'hip hinge exercise how to beginners'}]},
       {label:'Cool down',exs:[{l:'A',n:'Seated hamstring stretch',s:'30s each'},{l:'B',n:'Doorway chest stretch',s:'30s'}]}
     ]},
     3:{name:'Move & Balance',phases:[
@@ -297,14 +297,14 @@ const WORKOUTS={
     1:{name:'Strength + Balance',phases:[
       {label:'Activation · 5 min',exs:[{l:'A',n:'Leg swings fwd/bck',s:'×10 each'},{l:'B',n:'Hip circles',s:'×10 each'},{l:'C',n:'Arm circles',s:'×10 each'}]},
       {label:'Proprioception',exs:[{l:'A',n:'Single leg balance',s:'3×15s each — eyes open then closed',note:'Progress to eyes closed week 3+'},{l:'B',n:'Single leg heel raise',s:'3×10 each — slow lower',note:'Ankle stability'},{l:'C',n:'Lateral balance reach',s:'3×8 each — stand on 1 leg, reach other foot out to side'}]},
-      {label:'Strength · Machine/Bodyweight',exs:[{l:'A',n:'Goblet squat (light DB)',s:'3×12'},{l:'B',n:'DB row (each arm)',s:'3×10'},{l:'C',n:'Pushup (modified ok)',s:'3×8'},{l:'D',n:'Glute bridge',s:'3×15'}]},
+      {label:'Strength · Machine/Bodyweight',exs:[{l:'A',n:'Goblet squat (light DB)',s:'3×12',how:'Hold a dumbbell vertically at your chest. Feet shoulder width, toes slightly out. Sit back and down keeping chest up and knees tracking over toes.',vid:'goblet squat how to beginners dumbbell'},{l:'B',n:'DB row (each arm)',s:'3×10'},{l:'C',n:'Pushup (modified ok)',s:'3×8'},{l:'D',n:'Glute bridge',s:'3×15'}]},
       {label:'Core',exs:[{l:'A',n:'Plank hold',s:'3×20s'},{l:'B',n:'Dead bug',s:'3×8 each'}]}
     ]},
     3:{name:'Pull + Core + Balance',phases:[
       {label:'Activation',exs:[{l:'A',n:'Band pull-aparts',s:'2×15'},{l:'B',n:'Leg swings',s:'×10 each'},{l:'C',n:'Thoracic rotation',s:'×10 each side'}]},
-      {label:'Proprioception',exs:[{l:'A',n:'Single leg RDL (no weight)',s:'3×8 each — hinge at hip, free leg extends back',note:'Biggest balance challenge yet'},{l:'B',n:'Tandem walk eyes closed',s:'2×10 steps',note:'Heel to toe, hands out for balance'}]},
+      {label:'Proprioception',exs:[{l:'A',n:'Single leg RDL (no weight)',s:'3×8 each — hinge at hip, free leg extends back',note:'Biggest balance challenge yet',how:'Stand on one leg, soft knee. Push hips back while free leg extends behind you. Keep back flat. Return to standing. Think T-shape at bottom.',vid:'single leg RDL how to beginners no weight'},{l:'B',n:'Tandem walk eyes closed',s:'2×10 steps',note:'Heel to toe, hands out for balance'}]},
       {label:'Strength',exs:[{l:'A',n:'Lat pulldown or band pull-down',s:'3×10'},{l:'B',n:'Seated cable row or band row',s:'3×12'},{l:'C',n:'Face pulls or band pull-apart',s:'3×15'}]},
-      {label:'Core + Spartan prep',exs:[{l:'A',n:'Plank',s:'3×25s'},{l:'B',n:'Hanging knee raise or lying knee raise',s:'3×10'},{l:'C',n:'Burpee practice — slow',s:'3×3',note:'Learn the movement. Step back, step forward.'}]}
+      {label:'Core + Spartan prep',exs:[{l:'A',n:'Plank',s:'3×25s'},{l:'B',n:'Hanging knee raise or lying knee raise',s:'3×10'},{l:'C',n:'Burpee practice — slow',s:'3×3',note:'Learn the movement. Step back, step forward.',how:'1) Stand. 2) Hands to floor. 3) Step one foot back, then the other (plank position). 4) Step feet forward. 5) Stand and reach up. Go SLOW.',vid:'how to do a burpee step by step beginners'}]}
     ]},
     5:{name:'Push + Cardio + Balance',phases:[
       {label:'Warm-up',exs:[{l:'A',n:'5 min bike or row machine',s:'Easy pace'}]},
@@ -325,7 +325,7 @@ const WORKOUTS={
       {label:'Spartan finisher',exs:[{l:'A',n:'Burpees',s:'3×8'},{l:'B',n:'Farmer carry',s:'2×40 steps — DB each hand'}]}
     ]},
     3:{name:'Back + Core + Balance',phases:[
-      {label:'Activation',exs:[{l:'A',n:'Dead hang',s:'2×20s'},{l:'B',n:'Face pulls',s:'2×15'},{l:'C',n:'Hip 90/90 stretch',s:'45s each'}]},
+      {label:'Activation',exs:[{l:'A',n:'Dead hang',s:'2×20s',how:'Grip the bar with both hands shoulder width apart. Let your body hang fully, arms straight. Shoulders engaged — dont let them scrunch up to ears.',vid:'dead hang how to grip strength beginners'},{l:'B',n:'Face pulls',s:'2×15'},{l:'C',n:'Hip 90/90 stretch',s:'45s each'}]},
       {label:'Proprioception',exs:[{l:'A',n:'Single leg RDL to row',s:'3×8 each — hinge + row DB simultaneously',note:'Combines balance + pull'},{l:'B',n:'Standing on 1 leg — head rotations',s:'3×8 each — proprioception challenge'}]},
       {label:'Strength',exs:[{l:'A',n:'Lat pulldown',s:'4×10'},{l:'B',n:'Seated row',s:'3×12'},{l:'C',n:'Face pulls',s:'3×15'}]},
       {label:'Core + Obstacle',exs:[{l:'A',n:'Plank',s:'3×40s'},{l:'B',n:'Hanging knee raise',s:'3×12'},{l:'C',n:'Rope or towel pull (seated)',s:'3×10',note:'Rope climb prep'},{l:'D',n:'Burpees',s:'3×10'}]}
@@ -874,7 +874,10 @@ function renderDaily(){
         const injNote=getInjuryNote(ex.n,userInjuries);
         const exKey=`${dk}.ex.${pi}_${ei}`;
         const exDone=g(`${exKey}.done`,false);
-        const hasWeight=ex.s&&(ex.s.includes('×')||ex.s.toLowerCase().includes('rep')||ex.s.toLowerCase().includes('set'));
+        // Cardio/timed: has 'min', 'sec', 'steps', or is a walk/run/jog/carry/hold
+        const isCardio=ex.s&&(/min|sec|steps|walk|jog|run/i.test(ex.s)||/walk|jog|run|carry|hang|hold|march|crawl|bike|row/i.test(ex.n));
+        // Strength: has × with numbers like 3×10, 2×15 etc — but NOT cardio
+        const hasWeight=!isCardio&&ex.s&&/\d+[×x]\d+/.test(ex.s);
         H+=`<div class="ex-row" style="flex-direction:column;align-items:stretch">
           <div style="display:flex;align-items:flex-start;gap:8px">
             <div onclick="tog('${exKey}.done');renderAll()" style="cursor:pointer">
@@ -899,7 +902,17 @@ function renderDaily(){
             <input type="text" value="${g(`${exKey}.s${sn}.w`,'')}" oninput="sv('${exKey}.s${sn}.w',this.value)" placeholder="lbs" style="text-align:center;padding:4px;font-size:11px">
             <input type="text" value="${g(`${exKey}.s${sn}.r`,'')}" oninput="sv('${exKey}.s${sn}.r',this.value)" placeholder="reps" style="text-align:center;padding:4px;font-size:11px">
             <input type="text" value="${g(`${exKey}.s${sn}.n`,'')}" oninput="sv('${exKey}.s${sn}.n',this.value)" placeholder="..." style="padding:4px;font-size:11px">
-          </div>`).join('')}`:''}
+          </div>`).join('')}`
+          :isCardio?`<div style="display:grid;grid-template-columns:auto 1fr 1fr;gap:4px;margin-top:6px;margin-left:28px;align-items:center">
+            <div style="font-size:10px;color:var(--muted);padding:3px 5px">Log</div>
+            <div style="font-size:10px;font-weight:600;color:var(--muted);text-align:center">Time / Distance</div>
+            <div style="font-size:10px;font-weight:600;color:var(--muted);text-align:center">How did it feel?</div>
+          </div>
+          <div style="display:grid;grid-template-columns:auto 1fr 1fr;gap:4px;margin-top:2px;margin-left:28px;align-items:center">
+            <div style="font-size:10px;color:var(--muted);padding:3px 5px">Done</div>
+            <input type="text" value="${g(`${exKey}.time`,'')}" oninput="sv('${exKey}.time',this.value)" placeholder="e.g. 20 min" style="text-align:center;padding:4px;font-size:11px">
+            <input type="text" value="${g(`${exKey}.feel`,'')}" oninput="sv('${exKey}.feel',this.value)" placeholder="Easy / Hard..." style="padding:4px;font-size:11px">
+          </div>`:''}
         </div>`;
       });
       H+=`</div></div>`;
