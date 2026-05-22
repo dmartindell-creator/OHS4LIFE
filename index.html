@@ -1138,33 +1138,57 @@ async function renderLeaderboard(){
   // Sort by F.I.T.N.E.S.S. score
   const sorted=[...memberData].sort((a,b)=>b.fitnessScore-a.fitnessScore||b.sessions-a.sessions);
 
-  let H=`<div class="dh"><div class="dn" style="color:var(--g)">OHS Squad</div><div class="dm"><div style="font-size:10px;color:var(--muted)">This week</div><div style="font-size:14px;font-weight:700;color:var(--g)">${sorted.length} members</div></div></div>`;
+  const maxFit=FITNESS_PILLARS.length*9;
 
-  // MAIN LEADERBOARD
-  H+=`<div class="sec"><div class="sh"><div class="st"><div class="dot" style="background:var(--gold)"></div>F.I.T.N.E.S.S. leaderboard</div></div>
-  <div class="card">
-    ${sorted.map((m,i)=>`<div class="lb-row">
-      <div class="lb-rank">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div>
-      <div style="flex:1"><div class="lb-name">${esc(m.name)}${m.isMe?' 👋':''}</div>
-        <div class="lb-tier">${TIERS[m.tier||3].emoji} ${TIERS[m.tier||3].name}</div>
-      </div>
-      <div style="text-align:right"><div class="lb-val">${m.fitnessScore}/63</div><div style="font-size:10px;color:var(--muted)">${m.sessions} sessions</div></div>
-    </div>`).join('')}
-  </div></div>`;
+  // HEADER
+  H+=`<div style="margin-bottom:14px">
+    <div style="font-size:26px;font-weight:800;color:var(--g)">OHS Squad</div>
+    <div style="font-size:12px;color:var(--muted);margin-top:2px">${sorted.length} members · Week ${getTrainingWeek()} · F.I.T.N.E.S.S. rankings</div>
+  </div>`;
+
+  // FULL SQUAD BY TIER
+  H+=`<div class="sec"><div class="sh"><div class="st"><div class="dot" style="background:var(--gold)"></div>Full squad — ranked by tier + score</div></div></div>`;
+
+  // Group by tier, highest tier first
+  for(let t=5;t>=1;t--){
+    const tierMembers=sorted.filter(m=>(m.tier||3)===t);
+    if(!tierMembers.length)continue;
+    const tier=TIERS[t];
+    H+=`<div style="margin-bottom:4px;padding:6px 10px;background:${tier.color};border-radius:8px 8px 0 0;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:12px;font-weight:700;color:white">${tier.emoji} Tier ${t} — ${tier.name}</div>
+      <div style="font-size:10px;color:rgba(255,255,255,.6)">${tierMembers.length} member${tierMembers.length!==1?'s':''}</div>
+    </div>
+    <div class="card" style="border-radius:0 0 8px 8px;margin-bottom:10px;padding:0">
+      ${tierMembers.map((m,i)=>`<div class="lb-row" style="padding:10px 14px">
+        <div class="lb-rank" style="font-size:14px">${i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1)}</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600">${esc(m.name)}${m.isMe?' 👋':''}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:1px">${m.sessions} sessions · ${m.burpees} burpees</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:13px;font-weight:700;color:var(--g)">${m.fitnessScore}/${maxFit}</div>
+          <div style="font-size:10px;color:var(--muted)">F.I.T.N.E.S.S.</div>
+        </div>
+      </div>`).join('')}
+    </div>`;
+  }
 
   // SECONDARY LEADERBOARDS
   const lbs=[
-    {title:'Most sessions',key:'sessions',unit:'sessions',color:'var(--g)'},
-    {title:'Most burpees',key:'burpees',unit:'burpees',color:'#c02828'},
-    {title:'Longest dead hang',key:'hang',unit:'sec',color:'var(--gd)'}
+    {title:'Most sessions this week',key:'sessions',unit:'sessions',color:'var(--g)'},
+    {title:'Most burpees this week',key:'burpees',unit:'burpees',color:'#c02828'},
+    {title:'Longest dead hang this week',key:'hang',unit:'sec',color:'var(--gd)'}
   ];
   lbs.forEach(lb=>{
     const s=[...memberData].sort((a,b)=>b[lb.key]-a[lb.key]).slice(0,5);
-    H+=`<div class="sec"><div class="sh"><div class="st"><div class="dot" style="background:${lb.color}"></div>${lb.title} this week</div></div>
+    if(s.every(m=>m[lb.key]===0))return; // hide if everyone is 0
+    H+=`<div class="sec"><div class="sh"><div class="st"><div class="dot" style="background:${lb.color}"></div>${lb.title}</div></div>
     <div class="card">
       ${s.map((m,i)=>`<div class="lb-row">
         <div class="lb-rank">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div>
-        <div class="lb-name">${esc(m.name)}${m.isMe?' 👋':''}</div>
+        <div style="flex:1"><div class="lb-name">${esc(m.name)}${m.isMe?' 👋':''}</div>
+          <div style="font-size:10px;color:var(--muted)">${TIERS[m.tier||3].emoji} ${TIERS[m.tier||3].name}</div>
+        </div>
         <div class="lb-val" style="color:${lb.color}">${m[lb.key]} <span style="font-size:10px;color:var(--muted)">${lb.unit}</span></div>
       </div>`).join('')}
     </div></div>`;
